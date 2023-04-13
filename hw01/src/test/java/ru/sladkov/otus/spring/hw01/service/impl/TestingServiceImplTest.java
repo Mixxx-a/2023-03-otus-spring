@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.sladkov.otus.spring.hw01.dao.QuestionItemDao;
+import ru.sladkov.otus.spring.hw01.model.Question;
 import ru.sladkov.otus.spring.hw01.service.IOService;
-import ru.sladkov.otus.spring.hw01.service.QuestionsLoader;
+import ru.sladkov.otus.spring.hw01.service.QuestionDao;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TestingServiceImplTest {
 
     @Mock
-    private QuestionsLoader questionsLoader;
+    private QuestionDao questionsLoader;
 
     @Mock
     private InputStream inputStream;
@@ -51,13 +51,19 @@ public class TestingServiceImplTest {
 
     @Test
     public void testService() {
-        QuestionItemDao question = new QuestionItemDao("Test question", List.of("1", "2"), 0);
-        List<QuestionItemDao> questions = List.of(question);
+        Question question = new Question("Test question", List.of("1", "2"), 0);
+        List<Question> questions = List.of(question);
         when(questionsLoader.getQuestions()).thenReturn(questions);
 
         testingService.printQuestionsInfo();
         String result = byteArrayOutputStream.toString();
-        assertThat(result).isEqualTo("Question: Test question\nAnswers: (1) 1; (2) 2; \nCorrect answer is: 1\n");
+        String expected = "Question: Test question"
+                + System.lineSeparator()
+                + "Answers: (1) 1; (2) 2;"
+                + System.lineSeparator()
+                + "Correct answer is: 1"
+                + System.lineSeparator();
+        assertThat(result).isEqualTo(expected);
     }
 
 }

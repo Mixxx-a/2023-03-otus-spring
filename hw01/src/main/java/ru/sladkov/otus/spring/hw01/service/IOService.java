@@ -1,7 +1,9 @@
 package ru.sladkov.otus.spring.hw01.service;
 
-public interface IOService {
-    void print(String string);
+import ru.sladkov.otus.spring.hw01.exception.PrintException;
 
-    void println(String string);
+public interface IOService {
+    void print(String string) throws PrintException;
+
+    void println(String string) throws PrintException;
 }

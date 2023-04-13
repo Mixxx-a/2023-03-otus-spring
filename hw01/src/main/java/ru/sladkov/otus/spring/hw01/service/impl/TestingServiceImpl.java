@@ -1,39 +1,45 @@
 package ru.sladkov.otus.spring.hw01.service.impl;
 
-import ru.sladkov.otus.spring.hw01.dao.QuestionItemDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.sladkov.otus.spring.hw01.exception.PrintException;
+import ru.sladkov.otus.spring.hw01.model.Question;
 import ru.sladkov.otus.spring.hw01.service.IOService;
-import ru.sladkov.otus.spring.hw01.service.QuestionsLoader;
+import ru.sladkov.otus.spring.hw01.service.QuestionDao;
 import ru.sladkov.otus.spring.hw01.service.TestingService;
 
 import java.util.List;
 
 public class TestingServiceImpl implements TestingService {
-    private final QuestionsLoader questionsLoader;
+    private final static Logger LOGGER = LoggerFactory.getLogger(TestingService.class);
+
+    private final QuestionDao questionsLoader;
 
     private final IOService ioService;
 
-    private List<QuestionItemDao> questions;
-
-    public TestingServiceImpl(QuestionsLoader questionsLoader, IOService ioService) {
+    public TestingServiceImpl(QuestionDao questionsLoader, IOService ioService) {
         this.questionsLoader = questionsLoader;
         this.ioService = ioService;
     }
 
     @Override
     public void printQuestionsInfo() {
-        if (questions == null) {
-            questions = questionsLoader.getQuestions();
-        }
+        List<Question> questions = questionsLoader.getQuestions();
 
-        questions.forEach((questionItem -> {
-            List<String> answers = questionItem.answers();
-            ioService.println("Question: " + questionItem.question());
-            ioService.print("Answers: ");
-            for (int i = 0; i < answers.size(); i++) {
-                int answerNumber = i + 1;
-                ioService.print("(" + answerNumber + ") " + answers.get(i) + "; ");
+        try {
+            for (Question questionItem : questions) {
+                List<String> answers = questionItem.answers();
+                ioService.println("Question: " + questionItem.question());
+                ioService.print("Answers:");
+                for (int i = 0; i < answers.size(); i++) {
+                    int answerNumber = i + 1;
+                    ioService.print(" (" + answerNumber + ") " + answers.get(i) + ";");
+                }
+                ioService.println("");
+                ioService.println("Correct answer is: " + answers.get(questionItem.correctAnswerIndex()));
             }
-            ioService.println("\nCorrect answer is: " + answers.get(questionItem.correctAnswerIndex()));
-        }));
+        } catch (PrintException e) {
+            LOGGER.error("Can't print questions info", e);
+        }
     }
 }

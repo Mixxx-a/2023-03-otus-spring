@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="questionsLoader" class="ru.sladkov.otus.spring.hw01.service.impl.QuestionsLoaderCsvImpl">
+    <bean id="questionDao" class="ru.sladkov.otus.spring.hw01.service.impl.QuestionDaoCsvImpl">
         <constructor-arg name="pathToCsv" value="/questions.csv"/>
     </bean>
 
@@ -14,7 +14,7 @@
     </bean>
 
     <bean id="questionsService" class="ru.sladkov.otus.spring.hw01.service.impl.TestingServiceImpl">
-        <constructor-arg name="questionsLoader" ref="questionsLoader"/>
+        <constructor-arg name="questionsLoader" ref="questionDao"/>
         <constructor-arg name="ioService" ref="ioService"/>
     </bean>
 
