@@ -12,6 +12,7 @@
 
     <modules>
         <module>hw01-xmlConfig</module>
+        <module>hw02-javaAnnotationConfig</module>
     </modules>
 
     <properties>
