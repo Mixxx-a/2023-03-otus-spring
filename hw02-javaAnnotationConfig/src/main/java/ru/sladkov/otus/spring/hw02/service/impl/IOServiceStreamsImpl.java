@@ -2,6 +2,8 @@ package ru.sladkov.otus.spring.hw02.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.sladkov.otus.spring.hw02.exception.PrintException;
+import ru.sladkov.otus.spring.hw02.exception.ScanException;
 import ru.sladkov.otus.spring.hw02.service.IOService;
 
 import java.io.InputStream;
@@ -23,22 +25,40 @@ public class IOServiceStreamsImpl implements IOService {
     }
 
     @Override
-    public void print(String string) {
-        out.print(string);
+    public void print(String string) throws PrintException {
+        try {
+            out.print(string);
+        } catch (Exception e) {
+            throw new PrintException("Exception during printing " + string, e);
+        }
     }
 
     @Override
-    public void println(String string) {
-        out.println(string);
+    public void println(String string) throws PrintException {
+        try {
+            out.println(string);
+        } catch (Exception e) {
+            throw new PrintException("Exception during printing " + string, e);
+        }
     }
 
     @Override
-    public void println() {
-        out.println();
+    public void println() throws PrintException {
+        try {
+            out.println();
+        } catch (Exception e) {
+            throw new PrintException("Exception during printing new line", e);
+        }
     }
 
     @Override
-    public String scanNext() {
-        return input.next();
+    public String scanNext() throws ScanException {
+        String next;
+        try {
+            next = input.next();
+        } catch (Exception e) {
+            throw new ScanException("Exception during scanning", e);
+        }
+        return next;
     }
 }
