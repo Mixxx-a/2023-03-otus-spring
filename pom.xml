@@ -13,6 +13,7 @@
     <modules>
         <module>hw01-xmlConfig</module>
         <module>hw02-javaAnnotationConfig</module>
+        <module>hw03-springBoot</module>
     </modules>
 
     <properties>
