@@ -2,6 +2,8 @@ package ru.sladkov.otus.spring.hw02.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import ru.sladkov.otus.spring.hw02.model.Question;
 import ru.sladkov.otus.spring.hw02.service.QuestionDao;
 
@@ -11,17 +13,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+@Repository
 public class QuestionDaoCsvImpl implements QuestionDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(QuestionDao.class);
 
     private final String pathToCsv;
 
-    public QuestionDaoCsvImpl(String pathToCsv) {
+    public QuestionDaoCsvImpl(@Value("${repository.path-to-csv}") String pathToCsv) {
         this.pathToCsv = pathToCsv;
     }
 
     @Override
-    public List<Question> getQuestions() {
+    public List<Question> getAll() {
         List<Question> questions = new ArrayList<>();
         try (Scanner scanner = new Scanner(new InputStreamReader(this.getClass().getResourceAsStream(pathToCsv)))) {
             if (!scanner.hasNext()) {
