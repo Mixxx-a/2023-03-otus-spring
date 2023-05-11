@@ -2,10 +2,13 @@ package ru.sladkov.otus.spring.hw03.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.sladkov.otus.spring.hw03.configs.LocaleConfig;
+import ru.sladkov.otus.spring.hw03.configs.RepositoryConfig;
 import ru.sladkov.otus.spring.hw03.model.Question;
 import ru.sladkov.otus.spring.hw03.service.QuestionDao;
 
 import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +18,9 @@ public class QuestionDaoCsvImplTest {
     @DisplayName("correctly load questions from csv")
     @Test
     public void shouldCorrectlyLoadQuestions() {
-        QuestionDao questionDao = new QuestionDaoCsvImpl("/questions.csv");
+        QuestionDao questionDao = new QuestionDaoCsvImpl(
+                new RepositoryConfig("/questions"),
+                new LocaleConfig(Locale.ENGLISH));
         List<Question> questions = questionDao.getAll();
 
         assertThat(questions.size()).isEqualTo(2);

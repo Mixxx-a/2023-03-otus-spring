@@ -8,12 +8,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import ru.sladkov.otus.spring.hw03.configs.LocaleConfig;
+import ru.sladkov.otus.spring.hw03.configs.TestingServiceConfig;
 import ru.sladkov.otus.spring.hw03.model.Question;
 import ru.sladkov.otus.spring.hw03.service.IOService;
 import ru.sladkov.otus.spring.hw03.service.QuestionDao;
 
 import java.io.*;
 import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -39,6 +43,12 @@ public class TestingServiceImplTest {
     private final static String PRINTED_TEXT_PASSED = "You have passed the test!!!";
     private final static String PRINTED_TEXT_NOT_PASSED = "You don't have enough points to pass the test. Try again!";
 
+    private final TestingServiceConfig testingServiceConfig = new TestingServiceConfig(1);
+
+    private final LocaleConfig localeConfig = new LocaleConfig(Locale.ENGLISH);
+
+    private final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
     @Mock
     private QuestionDao questionsLoader;
 
@@ -59,6 +69,9 @@ public class TestingServiceImplTest {
         Question question = new Question("Test question", List.of("1", "2"), 0);
         List<Question> questions = List.of(question);
         when(questionsLoader.getAll()).thenReturn(questions);
+
+        messageSource.setBasenames("i18n/messages");
+        messageSource.setDefaultEncoding("UTF-8");
     }
 
     @AfterEach
@@ -72,7 +85,7 @@ public class TestingServiceImplTest {
     public void shouldCorrectlyPrintQuestionsInfo() {
         inputStream = Mockito.mock();
         IOService ioService = new IOServiceStreamsImpl(inputStream, outputStream);
-        testingService = new TestingServiceImpl(questionsLoader, ioService, 1);
+        testingService = new TestingServiceImpl(testingServiceConfig, localeConfig, questionsLoader, ioService, messageSource);
 
         testingService.printQuestionsInfo();
 
@@ -89,7 +102,7 @@ public class TestingServiceImplTest {
         String input = "Name\nSurname\n1";
         inputStream = new ByteArrayInputStream(input.getBytes());
         IOService ioService = new IOServiceStreamsImpl(inputStream, outputStream);
-        testingService = new TestingServiceImpl(questionsLoader, ioService, 1);
+        testingService = new TestingServiceImpl(testingServiceConfig, localeConfig, questionsLoader, ioService, messageSource);
 
         testingService.performTesting();
 
@@ -97,6 +110,7 @@ public class TestingServiceImplTest {
         String expected = PRINTED_GREETINGS
                 + PRINTED_QUESTION
                 + PRINTED_ANSWER_PROMPT
+                + System.lineSeparator()
                 + PRINTED_CONGRATULATIONS
                 + "You got 1 points!"
                 + System.lineSeparator()
@@ -110,7 +124,7 @@ public class TestingServiceImplTest {
         String input = "Name\nSurname\n0";
         inputStream = new ByteArrayInputStream(input.getBytes());
         IOService ioService = new IOServiceStreamsImpl(inputStream, outputStream);
-        testingService = new TestingServiceImpl(questionsLoader, ioService, 1);
+        testingService = new TestingServiceImpl(testingServiceConfig, localeConfig, questionsLoader, ioService, messageSource);
 
         testingService.performTesting();
 
@@ -118,6 +132,7 @@ public class TestingServiceImplTest {
         String expected = PRINTED_GREETINGS
                 + PRINTED_QUESTION
                 + PRINTED_ANSWER_PROMPT
+                + System.lineSeparator()
                 + PRINTED_CONGRATULATIONS
                 + "You got 0 points!"
                 + System.lineSeparator()
