@@ -1,0 +1,14 @@
+spring:
+  messages:
+    basename: "i18n/messages"
+    encoding: "UTF-8"
+
+application:
+  locale: ru
+#  locale: en
+
+  repository:
+    base-path-to-csv: /questions
+
+  testingservice:
+    points-to-pass: 3
