@@ -21,6 +21,7 @@
         <module>hw01-xmlConfig</module>
         <module>hw02-javaAnnotationConfig</module>
         <module>hw03-springBoot</module>
+        <module>hw04-springShell</module>
     </modules>
 
     <properties>
