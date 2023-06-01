@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 
 @Configuration
@@ -24,5 +26,11 @@ public class AppConfig {
     @Bean
     public LocaleConfig localeConfig(@Value("${application.locale}") Locale locale) {
         return new LocaleConfig(locale);
+    }
+
+    @Bean
+    public IOServiceConfig ioServiceConfig(@Value("#{T(System).in}") InputStream input,
+                                           @Value("#{T(System).out}") OutputStream output) {
+        return new IOServiceConfig(input, output);
     }
 }

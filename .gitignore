@@ -1,4 +1,5 @@
 target/
+spring-shell.log
 
 ### IntelliJ IDEA ###
 .idea

@@ -20,26 +20,24 @@ public class TestingServiceImpl implements TestingService {
 
     private final LocaleConfig localeConfig;
 
-    private final QuestionDao questionsLoader;
+    private final QuestionDao questionDao;
 
     private final IOService ioService;
 
     private final MessageSource messageSource;
 
     public TestingServiceImpl(TestingServiceConfig testingServiceConfig, LocaleConfig localeConfig,
-                              QuestionDao questionsLoader, IOService ioService, MessageSource messageSource) {
+                              QuestionDao questionDao, IOService ioService, MessageSource messageSource) {
         this.testingServiceConfig = testingServiceConfig;
         this.localeConfig = localeConfig;
-        this.questionsLoader = questionsLoader;
+        this.questionDao = questionDao;
         this.ioService = ioService;
         this.messageSource = messageSource;
     }
 
     @Override
-    public void performTesting() {
-        Student student = getStudentInfo();
-
-        List<Question> questions = questionsLoader.getAll();
+    public void performTesting(Student student) {
+        List<Question> questions = questionDao.getAll();
         ioService.println(getLocalizedMessage("testingservice.questions-loaded"));
 
         for (int i = 0; i < questions.size(); i++) {
@@ -53,7 +51,7 @@ public class TestingServiceImpl implements TestingService {
 
     @Override
     public void printQuestionsInfo() {
-        List<Question> questions = questionsLoader.getAll();
+        List<Question> questions = questionDao.getAll();
 
         for (int i = 0; i < questions.size(); i++) {
             Question questionItem = questions.get(i);
@@ -61,14 +59,6 @@ public class TestingServiceImpl implements TestingService {
             ioService.println(getLocalizedMessage("testingservice.correct-answer-is",
                     questionItem.answers().get(questionItem.correctAnswerIndex())));
         }
-    }
-
-    private Student getStudentInfo() {
-        ioService.println(getLocalizedMessage("testingservice.ask-student-name"));
-        String name = ioService.scanNext();
-        ioService.println(getLocalizedMessage("testingservice.ask-student-surname"));
-        String surname = ioService.scanNext();
-        return new Student(name, surname);
     }
 
     private boolean askQuestion(int numberOfQuestion, Question question) {
