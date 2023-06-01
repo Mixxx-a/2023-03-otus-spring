@@ -3,10 +3,11 @@ spring:
     basename: "i18n/messages"
     encoding: "UTF-8"
 
+  shell:
+    interactive:
+      enabled: false
+
 application:
-  locale: ru
-#  locale: en
-
+  locale: en
   base-path-to-csv: /questions
-
-  points-to-pass: 3
+  points-to-pass: 1

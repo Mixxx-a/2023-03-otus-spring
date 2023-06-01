@@ -1,11 +1,9 @@
 package ru.sladkov.otus.spring.hw04.service.impl;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.sladkov.otus.spring.hw04.configs.IOServiceConfig;
 import ru.sladkov.otus.spring.hw04.service.IOService;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -16,10 +14,9 @@ public class IOServiceStreamsImpl implements IOService {
 
     private final PrintStream out;
 
-    public IOServiceStreamsImpl(@Value("#{T(System).in}") InputStream input,
-                                @Value("#{T(System).out}") OutputStream output) {
-        this.input = new Scanner(input);
-        this.out = new PrintStream(output);
+    public IOServiceStreamsImpl(IOServiceConfig ioServiceConfig) {
+        this.input = new Scanner(ioServiceConfig.getInputStream());
+        this.out = new PrintStream(ioServiceConfig.getOutputStream());
     }
 
     @Override

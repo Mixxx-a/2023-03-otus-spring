@@ -27,4 +27,8 @@ public class Student {
     public void addPoint() {
         points++;
     }
+
+    public void resetPoints() {
+        points = 0;
+    }
 }
