@@ -9,9 +9,5 @@ spring:
 
 application:
   locale: en
-
-  repository:
-    base-path-to-csv: /questions
-
-  testingservice:
-    points-to-pass: 1
+  base-path-to-csv: /questions
+  points-to-pass: 1

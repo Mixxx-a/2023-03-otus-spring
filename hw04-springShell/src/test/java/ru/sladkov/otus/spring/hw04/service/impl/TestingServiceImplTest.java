@@ -42,8 +42,8 @@ public class TestingServiceImplTest {
 
     @BeforeEach
     public void beforeEach() {
-        when(testingServiceConfig.pointsToPass()).thenReturn(1);
-        when(localeConfig.locale()).thenReturn(Locale.ENGLISH);
+        when(testingServiceConfig.getPointsToPass()).thenReturn(1);
+        when(localeConfig.getLocale()).thenReturn(Locale.ENGLISH);
 
         Question question = new Question("Test question", List.of("1", "2"), 0);
         List<Question> questions = List.of(question);
@@ -68,5 +68,17 @@ public class TestingServiceImplTest {
         testingService.performTesting(student);
 
         assertThat(student.getPoints()).isEqualTo(0);
+    }
+
+    @DisplayName("correctly perform testing multiple times")
+    @Test
+    public void shouldCorrectlyPerformTestingMultipleTimes() {
+        when(ioService.scanNext()).thenReturn("1");
+        Student student = new Student(STUDENT_NAME, STUDENT_SURNAME);
+        testingService.performTesting(student);
+        testingService.performTesting(student);
+        testingService.performTesting(student);
+
+        assertThat(student.getPoints()).isEqualTo(1);
     }
 }

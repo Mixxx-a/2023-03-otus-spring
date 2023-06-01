@@ -15,8 +15,8 @@ public class IOServiceStreamsImpl implements IOService {
     private final PrintStream out;
 
     public IOServiceStreamsImpl(IOServiceConfig ioServiceConfig) {
-        this.input = new Scanner(ioServiceConfig.inputStream());
-        this.out = new PrintStream(ioServiceConfig.outputStream());
+        this.input = new Scanner(ioServiceConfig.getInputStream());
+        this.out = new PrintStream(ioServiceConfig.getOutputStream());
     }
 
     @Override

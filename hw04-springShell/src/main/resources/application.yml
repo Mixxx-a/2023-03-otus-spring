@@ -7,8 +7,6 @@ application:
   locale: ru
 #  locale: en
 
-  repository:
-    base-path-to-csv: /questions
+  base-path-to-csv: /questions
 
-  testingservice:
-    points-to-pass: 3
+  points-to-pass: 3

@@ -8,13 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.sladkov.otus.spring.hw04.configs.LocaleConfig;
 import ru.sladkov.otus.spring.hw04.configs.RepositoryConfig;
 import ru.sladkov.otus.spring.hw04.model.Question;
 import ru.sladkov.otus.spring.hw04.service.QuestionDao;
 
 import java.util.List;
-import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -26,14 +24,11 @@ public class QuestionDaoCsvImplTest {
     @MockBean
     private RepositoryConfig repositoryConfig;
 
-    @MockBean
-    private LocaleConfig localeConfig;
-
     @Configuration
     public static class TestConfiguration {
         @Bean
-        public QuestionDao questionDao(RepositoryConfig repositoryConfig, LocaleConfig localeConfig) {
-            return new QuestionDaoCsvImpl(repositoryConfig, localeConfig);
+        public QuestionDao questionDao(RepositoryConfig repositoryConfig) {
+            return new QuestionDaoCsvImpl(repositoryConfig);
         }
     }
 
@@ -42,8 +37,7 @@ public class QuestionDaoCsvImplTest {
 
     @BeforeEach
     public void beforeEach() {
-        when(repositoryConfig.basePathToCsv()).thenReturn("/questions");
-        when(localeConfig.locale()).thenReturn(Locale.ENGLISH);
+        when(repositoryConfig.getPathToCsv()).thenReturn("/questions_en.csv");
     }
 
     @DisplayName("correctly load questions from csv")

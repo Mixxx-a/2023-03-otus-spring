@@ -3,7 +3,6 @@ package ru.sladkov.otus.spring.hw04.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.sladkov.otus.spring.hw04.configs.LocaleConfig;
 import ru.sladkov.otus.spring.hw04.configs.RepositoryConfig;
 import ru.sladkov.otus.spring.hw04.model.Question;
 import ru.sladkov.otus.spring.hw04.service.QuestionDao;
@@ -21,19 +20,15 @@ public class QuestionDaoCsvImpl implements QuestionDao {
 
     private final RepositoryConfig repositoryConfig;
 
-    private final LocaleConfig localeConfig;
-
-    public QuestionDaoCsvImpl(RepositoryConfig repositoryConfig, LocaleConfig localeConfig) {
+    public QuestionDaoCsvImpl(RepositoryConfig repositoryConfig) {
         this.repositoryConfig = repositoryConfig;
-        this.localeConfig = localeConfig;
     }
 
     @Override
     public List<Question> getAll() {
         List<Question> questions = new ArrayList<>();
-        String pathToCsv = repositoryConfig.basePathToCsv() + "_" + localeConfig.locale() + ".csv";
         try (Scanner scanner = new Scanner(new InputStreamReader(Objects.requireNonNull(
-                this.getClass().getResourceAsStream(pathToCsv))))) {
+                this.getClass().getResourceAsStream(repositoryConfig.getPathToCsv()))))) {
             if (!scanner.hasNext()) {
                 LOGGER.error("Empty csv was passed! No questions added");
                 return questions;

@@ -1,4 +1,5 @@
 package ru.sladkov.otus.spring.hw04.configs;
 
-public record TestingServiceConfig(int pointsToPass) {
+public interface TestingServiceConfig {
+    int getPointsToPass();
 }
