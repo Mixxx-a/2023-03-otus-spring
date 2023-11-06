@@ -1,12 +1,12 @@
-INSERT INTO AUTHORS(ID, FORENAME, SURNAME)
-VALUES (1, 'Andrzej', 'Sapkowski'),
-       (2, 'Alexander', 'Pushkin');
+INSERT INTO AUTHORS(FORENAME, SURNAME)
+VALUES ('Andrzej', 'Sapkowski'),
+       ('Alexander', 'Pushkin');
 
-INSERT INTO GENRES(ID, NAME)
-VALUES (1, 'Fantasy'),
-       (2, 'Detective');
+INSERT INTO GENRES(NAME)
+VALUES ('Fantasy'),
+       ('Novel');
 
-INSERT INTO BOOKS(ID, TITLE, AUTHORID, GENREID)
-VALUES (1, 'book1', 1, 1),
-       (2, 'book2', 2, 2),
-       (3, 'book3', 1, 2);
+INSERT INTO BOOKS(TITLE, AUTHORID, GENREID)
+VALUES ('The Witcher', 1, 1),
+       ('Eugene Onegin', 2, 2),
+       ('Book3', 1, 2);

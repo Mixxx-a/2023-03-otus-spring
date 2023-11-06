@@ -4,6 +4,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.sladkov.otus.spring.hw05.dao.BookDao;
 import ru.sladkov.otus.spring.hw05.domain.Author;
@@ -26,10 +28,12 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public void insert(Book book) {
+    public Book create(Book book) {
         MapSqlParameterSource params = fillBookParameters(book);
-        jdbc.update("insert into books (id, title, authorid, genreid) values (:id, :title, :authorid, :genreid)",
-                params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update("insert into books (title, authorid, genreid) values (:title, :authorid, :genreid)",
+                params, keyHolder);
+        return new Book(keyHolder.getKey().longValue(), book.title(), book.author(), book.genre());
     }
 
     @Override
@@ -43,8 +47,8 @@ public class BookDaoJdbc implements BookDao {
     public Optional<Book> getById(long id) {
         try {
             return Optional.ofNullable(jdbc.queryForObject("select * from books" +
-                            " inner join authors on books.authorid = authors.id" +
-                            " inner join genres on books.genreid = genres.id" +
+                            " join authors on books.authorid = authors.id" +
+                            " join genres on books.genreid = genres.id" +
                             " where books.id = :id",
                     Map.of("id", id), new BookMapper()));
         } catch (EmptyResultDataAccessException e) {
@@ -55,8 +59,8 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public List<Book> getAll() {
         return jdbc.query("select * from books" +
-                        " inner join authors on books.authorid = authors.id" +
-                        " inner join genres on books.genreid = genres.id",
+                        " join authors on books.authorid = authors.id" +
+                        " join genres on books.genreid = genres.id",
                 new BookMapper());
     }
 

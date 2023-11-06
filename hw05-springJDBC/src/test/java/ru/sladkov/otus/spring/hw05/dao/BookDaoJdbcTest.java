@@ -52,8 +52,8 @@ public class BookDaoJdbcTest {
     void shouldInsertBook() {
         Author author = new Author(1, "A1", "A1");
         Genre genre = new Genre(1, "G1");
-        Book newBook = new Book(4, "Book4", author, genre);
-        bookDaoJdbc.insert(newBook);
+        Book newBook = new Book(null,"Book4", author, genre);
+        bookDaoJdbc.create(newBook);
 
         Optional<Book> optBook = bookDaoJdbc.getById(4);
         assertThat(optBook.isPresent()).isTrue();
@@ -67,7 +67,7 @@ public class BookDaoJdbcTest {
     void shouldUpdateBook() {
         Author author = new Author(1, "A1", "A1");
         Genre genre = new Genre(1, "G1");
-        Book newBook = new Book(3, "Book3Updated", author, genre);
+        Book newBook = new Book(3L, "Book3Updated", author, genre);
         bookDaoJdbc.update(newBook);
 
         Optional<Book> optBook = bookDaoJdbc.getById(3);

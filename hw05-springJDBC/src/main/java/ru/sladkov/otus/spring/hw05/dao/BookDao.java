@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookDao {
-    void insert(Book book);
+    Book create(Book book);
 
     void update(Book book);
 
