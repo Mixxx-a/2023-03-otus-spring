@@ -32,7 +32,6 @@
 
         <spring.version>6.0.7</spring.version>
         <spring-shell.version>3.0.1</spring-shell.version>
-        <h2.version>2.1.214</h2.version>
         <logback.version>1.4.6</logback.version>
 
         <junit.version>5.9.2</junit.version>
@@ -57,11 +56,6 @@
                 <groupId>org.springframework.shell</groupId>
                 <artifactId>spring-shell-starter</artifactId>
                 <version>${spring-shell.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>${h2.version}</version>
             </dependency>
 
             <!-- Logging -->

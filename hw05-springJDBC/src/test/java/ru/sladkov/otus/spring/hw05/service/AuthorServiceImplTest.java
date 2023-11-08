@@ -22,7 +22,7 @@ public class AuthorServiceImplTest {
 
     @DisplayName("return existing author by id")
     @Test
-    void shouldGetAuthorByIdExisting() throws NotFoundException {
+    void shouldGetAuthorByIdExisting() {
         Author author = authorService.getAuthorById(2);
         assertThat(author.id()).isEqualTo(2);
         assertThat(author.forename()).isEqualTo("AuthorForename2");

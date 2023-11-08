@@ -6,8 +6,7 @@ import org.springframework.shell.standard.ShellOption;
 import ru.sladkov.otus.spring.hw05.domain.Author;
 import ru.sladkov.otus.spring.hw05.domain.Book;
 import ru.sladkov.otus.spring.hw05.domain.Genre;
-import ru.sladkov.otus.spring.hw05.dto.BookDTO;
-import ru.sladkov.otus.spring.hw05.exception.NotFoundException;
+import ru.sladkov.otus.spring.hw05.dto.BookDto;
 import ru.sladkov.otus.spring.hw05.service.AuthorService;
 import ru.sladkov.otus.spring.hw05.service.BookService;
 import ru.sladkov.otus.spring.hw05.service.GenreService;
@@ -31,36 +30,24 @@ public class LibraryServiceCommands {
 
     @ShellMethod(value = "Create book", key = "createBook")
     public String createBook(@ShellOption String title, @ShellOption String authorId, @ShellOption String genreId) {
-        BookDTO bookDTO = new BookDTO(title, Long.parseLong(authorId), Long.parseLong(genreId));
-        try {
-            Book createdBook = bookService.createBook(bookDTO);
-            return "New book created with id " + createdBook.id();
-        } catch (NotFoundException nfe) {
-            return "Error during create book: " + nfe.getMessage();
-        }
+        BookDto bookDto = new BookDto(title, Long.parseLong(authorId), Long.parseLong(genreId));
+        Book createdBook = bookService.createBook(bookDto);
+        return "New book created with id " + createdBook.id();
     }
 
     @ShellMethod(value = "Update book", key = "updateBook")
     public String updateBook(@ShellOption String id, @ShellOption String newTitle,
                              @ShellOption String newAuthorId, @ShellOption String newGenreId) {
-        BookDTO newBookDTO = new BookDTO(Long.parseLong(id), newTitle, Long.parseLong(newAuthorId),
+        BookDto newBookDto = new BookDto(Long.parseLong(id), newTitle, Long.parseLong(newAuthorId),
                 Long.parseLong(newGenreId));
-        try {
-            bookService.updateBook(newBookDTO);
-            return "Book updated successfully!";
-        } catch (NotFoundException nfe) {
-            return "Error during update book: " + nfe.getMessage();
-        }
+        bookService.updateBook(newBookDto);
+        return "Book updated successfully!";
     }
 
     @ShellMethod(value = "Get book by id", key = "getBookById")
     public String getBookById(@ShellOption String id) {
-        try {
-            Book book = bookService.getBook(Long.parseLong(id));
-            return book.toString();
-        } catch (NotFoundException nfe) {
-            return "Error during get book: " + nfe.getMessage();
-        }
+        Book book = bookService.getBook(Long.parseLong(id));
+        return book.toString();
     }
 
     @ShellMethod(value = "Get all books", key = "getAllBooks")
@@ -77,12 +64,8 @@ public class LibraryServiceCommands {
 
     @ShellMethod(value = "Get author by id", key = "getAuthorById")
     public String getAuthorById(@ShellOption String id) {
-        try {
-            Author author = authorService.getAuthorById(Long.parseLong(id));
-            return author.toString();
-        } catch (NotFoundException nfe) {
-            return "Error during get author: " + nfe.getMessage();
-        }
+        Author author = authorService.getAuthorById(Long.parseLong(id));
+        return author.toString();
     }
 
     @ShellMethod(value = "Get all authors", key = "getAllAuthors")
@@ -93,12 +76,8 @@ public class LibraryServiceCommands {
 
     @ShellMethod(value = "Get genre by id", key = "getGenreById")
     public String getGenreById(@ShellOption String id) {
-        try {
-            Genre genre = genreService.getGenreById(Long.parseLong(id));
-            return genre.toString();
-        } catch (NotFoundException nfe) {
-            return "Error during get genre: " + nfe.getMessage();
-        }
+        Genre genre = genreService.getGenreById(Long.parseLong(id));
+        return genre.toString();
     }
 
     @ShellMethod(value = "Get all genres", key = "getAllGenres")
@@ -109,7 +88,8 @@ public class LibraryServiceCommands {
 
     private String createStringFromList(List<?> objects) {
         StringBuilder outputBuilder = new StringBuilder();
-        objects.forEach(object -> outputBuilder.append(object.toString()).append("\n"));
+        objects.forEach(object -> outputBuilder.append(object.toString())
+                .append("\n"));
         return outputBuilder.toString();
     }
 }

@@ -18,8 +18,9 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Genre getGenreById(long id) throws NotFoundException {
-        return genreDao.getById(id).orElseThrow(() -> new NotFoundException("Genre with id = " + id + " is not found"));
+    public Genre getGenreById(long id) {
+        return genreDao.getById(id)
+                .orElseThrow(() -> new NotFoundException("Genre with id = " + id + " is not found"));
     }
 
     @Override

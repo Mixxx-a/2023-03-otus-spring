@@ -33,7 +33,9 @@ public class BookDaoJdbc implements BookDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update("insert into books (title, authorid, genreid) values (:title, :authorid, :genreid)",
                 params, keyHolder);
-        return new Book(keyHolder.getKey().longValue(), book.title(), book.author(), book.genre());
+        Long generatedKey = keyHolder.getKey()
+                .longValue();
+        return new Book(generatedKey, book.title(), book.author(), book.genre());
     }
 
     @Override

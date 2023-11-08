@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sladkov.otus.spring.hw05.domain.Book;
-import ru.sladkov.otus.spring.hw05.dto.BookDTO;
+import ru.sladkov.otus.spring.hw05.dto.BookDto;
 import ru.sladkov.otus.spring.hw05.exception.NotFoundException;
 import ru.sladkov.otus.spring.hw05.service.impl.BookServiceImpl;
 
@@ -22,7 +22,7 @@ public class BookServiceImplTest {
 
     @DisplayName("return existing book by id")
     @Test
-    void shouldGetBookByIdExisting() throws NotFoundException {
+    void shouldGetBookByIdExisting() {
         Book book = bookService.getBook(2);
         assertThat(book.id()).isEqualTo(2);
         assertThat(book.title()).isEqualTo("Book2");
@@ -39,8 +39,8 @@ public class BookServiceImplTest {
     @DisplayName("create new book")
     @Test
     @Transactional
-    void shouldCreateBook() throws NotFoundException {
-        Book newBook = bookService.createBook(new BookDTO("Book4", 1L, 1L));
+    void shouldCreateBook() {
+        Book newBook = bookService.createBook(new BookDto("Book4", 1L, 1L));
 
         Book createdBook = bookService.getBook(4);
         assertThat(createdBook.id()).isEqualTo(4);
@@ -52,7 +52,7 @@ public class BookServiceImplTest {
     @Transactional
     void shouldNotCreateBookNonExistingAuthor() {
         assertThatThrownBy(() -> {
-            Book newBook = bookService.createBook(new BookDTO("Book4", 123L, 1L));
+            Book newBook = bookService.createBook(new BookDto("Book4", 123L, 1L));
         }).isInstanceOf(NotFoundException.class);
 
         assertThatThrownBy(() -> {
@@ -65,7 +65,7 @@ public class BookServiceImplTest {
     @Transactional
     void shouldNotCreateBookNonExistingGenre() {
         assertThatThrownBy(() -> {
-            Book newBook = bookService.createBook(new BookDTO("Book4", 1L, 123L));
+            Book newBook = bookService.createBook(new BookDto("Book4", 1L, 123L));
         }).isInstanceOf(NotFoundException.class);
 
         assertThatThrownBy(() -> {
@@ -76,8 +76,8 @@ public class BookServiceImplTest {
     @DisplayName("update book")
     @Test
     @Transactional
-    void shouldUpdateBook() throws NotFoundException {
-        bookService.updateBook(new BookDTO(3L, "Book3New", 1L, 1L));
+    void shouldUpdateBook() {
+        bookService.updateBook(new BookDto(3L, "Book3New", 1L, 1L));
 
         Book updatedBook = bookService.getBook(3);
         assertThat(updatedBook.id()).isEqualTo(3);
@@ -88,7 +88,7 @@ public class BookServiceImplTest {
     @Test
     @Transactional
     void shouldNotUpdateNonExistingBook() {
-        assertThatThrownBy(() -> bookService.updateBook(new BookDTO(4L, "Book4", 1L, 1L)))
+        assertThatThrownBy(() -> bookService.updateBook(new BookDto(4L, "Book4", 1L, 1L)))
                 .isInstanceOf(NotFoundException.class);
 
         assertThatThrownBy(() -> {
@@ -99,8 +99,8 @@ public class BookServiceImplTest {
     @DisplayName("not update book with non-existing author and throw NotFoundException")
     @Test
     @Transactional
-    void shouldNotUpdateBookNonExistingAuthor() throws NotFoundException {
-        assertThatThrownBy(() -> bookService.updateBook(new BookDTO(3L, "Book3New", 123L, 1L)))
+    void shouldNotUpdateBookNonExistingAuthor() {
+        assertThatThrownBy(() -> bookService.updateBook(new BookDto(3L, "Book3New", 123L, 1L)))
                 .isInstanceOf(NotFoundException.class);
 
         Book book = bookService.getBook(3);
@@ -111,8 +111,8 @@ public class BookServiceImplTest {
     @DisplayName("not update book with non-existing genre and throw NotFoundException")
     @Test
     @Transactional
-    void shouldNotUpdateBookNonExistingGenre() throws NotFoundException {
-        assertThatThrownBy(() -> bookService.updateBook(new BookDTO(3L, "Book3New", 1L, 123L)))
+    void shouldNotUpdateBookNonExistingGenre() {
+        assertThatThrownBy(() -> bookService.updateBook(new BookDto(3L, "Book3New", 1L, 123L)))
                 .isInstanceOf(NotFoundException.class);
 
         Book book = bookService.getBook(3);

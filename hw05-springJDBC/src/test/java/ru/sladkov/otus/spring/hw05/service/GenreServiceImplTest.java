@@ -22,7 +22,7 @@ public class GenreServiceImplTest {
 
     @DisplayName("return existing genre by id")
     @Test
-    void shouldGetGenreByIdExisting() throws NotFoundException {
+    void shouldGetGenreByIdExisting() {
         Genre genre = genreService.getGenreById(4);
         assertThat(genre.id()).isEqualTo(4);
         assertThat(genre.name()).isEqualTo("Genre4");

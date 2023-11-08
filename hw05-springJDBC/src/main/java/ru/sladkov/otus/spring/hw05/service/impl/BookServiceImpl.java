@@ -1,15 +1,15 @@
 package ru.sladkov.otus.spring.hw05.service.impl;
 
 import org.springframework.stereotype.Service;
+import ru.sladkov.otus.spring.hw05.dao.AuthorDao;
 import ru.sladkov.otus.spring.hw05.dao.BookDao;
+import ru.sladkov.otus.spring.hw05.dao.GenreDao;
 import ru.sladkov.otus.spring.hw05.domain.Author;
 import ru.sladkov.otus.spring.hw05.domain.Book;
 import ru.sladkov.otus.spring.hw05.domain.Genre;
-import ru.sladkov.otus.spring.hw05.dto.BookDTO;
+import ru.sladkov.otus.spring.hw05.dto.BookDto;
 import ru.sladkov.otus.spring.hw05.exception.NotFoundException;
-import ru.sladkov.otus.spring.hw05.service.AuthorService;
 import ru.sladkov.otus.spring.hw05.service.BookService;
-import ru.sladkov.otus.spring.hw05.service.GenreService;
 
 import java.util.List;
 
@@ -18,27 +18,34 @@ public class BookServiceImpl implements BookService {
 
     private final BookDao bookDao;
 
-    private final AuthorService authorService;
+    private final AuthorDao authorDao;
 
-    private final GenreService genreService;
+    private final GenreDao genreDao;
 
-    public BookServiceImpl(BookDao bookDao, AuthorService authorService, GenreService genreService) {
+    public BookServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao) {
         this.bookDao = bookDao;
-        this.authorService = authorService;
-        this.genreService = genreService;
+        this.authorDao = authorDao;
+        this.genreDao = genreDao;
     }
 
     @Override
-    public Book createBook(BookDTO bookDTO) throws NotFoundException {
-        Author author = authorService.getAuthorById(bookDTO.authorId());
-        Genre genre = genreService.getGenreById(bookDTO.genreId());
-        Book newBook = new Book(null, bookDTO.title(), author, genre);
+    public Book createBook(BookDto bookDto) {
+        Long authorId = bookDto.authorId();
+        Author author = authorDao.getById(authorId)
+                .orElseThrow(() -> new NotFoundException("Create book: Author with id = " + authorId + " is not found"));
+
+        Long genreId = bookDto.genreId();
+        Genre genre = genreDao.getById(genreId)
+                .orElseThrow(() -> new NotFoundException("Create book: Genre with id = " + genreId + " is not found"));
+
+        Book newBook = new Book(null, bookDto.title(), author, genre);
         return bookDao.create(newBook);
     }
 
     @Override
-    public Book getBook(long id) throws NotFoundException {
-        return bookDao.getById(id).orElseThrow(() -> new NotFoundException("Book with id = " + id + " is not found"));
+    public Book getBook(long id) {
+        return bookDao.getById(id)
+                .orElseThrow(() -> new NotFoundException("Book with id = " + id + " is not found"));
     }
 
     @Override
@@ -47,11 +54,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateBook(BookDTO newBookDTO) throws NotFoundException {
-        Book exisitingBook = this.getBook(newBookDTO.id());
-        Author newAuthor = authorService.getAuthorById(newBookDTO.authorId());
-        Genre newGenre = genreService.getGenreById(newBookDTO.genreId());
-        Book newBook = new Book(exisitingBook.id(), newBookDTO.title(), newAuthor, newGenre);
+    public void updateBook(BookDto newBookDto) {
+        Long bookId = newBookDto.id();
+        Book exisitingBook = bookDao.getById(bookId)
+                .orElseThrow(() -> new NotFoundException("Update book: Book with id = " + bookId + " is not found"));
+
+        Long newAuthorId = newBookDto.authorId();
+        Author newAuthor = authorDao.getById(newAuthorId)
+                .orElseThrow(() ->
+                        new NotFoundException("Update book: Author with id = " + newAuthorId + " is not found"));
+
+        Long newGenreId = newBookDto.genreId();
+        Genre newGenre = genreDao.getById(newGenreId)
+                .orElseThrow(() ->
+                        new NotFoundException("Update book: Genre with id = " + newGenreId + " is not found"));
+
+        Book newBook = new Book(exisitingBook.id(), newBookDto.title(), newAuthor, newGenre);
         bookDao.update(newBook);
     }
 
