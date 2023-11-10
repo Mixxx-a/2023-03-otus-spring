@@ -18,7 +18,6 @@ public class Genre {
     private String name;
 
     public Genre() {
-
     }
 
     public Genre(Long id, String name) {

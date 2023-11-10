@@ -26,7 +26,6 @@ public class Comment {
     private Book book;
 
     public Comment() {
-
     }
 
     public Comment(Long id, String text, Book book) {

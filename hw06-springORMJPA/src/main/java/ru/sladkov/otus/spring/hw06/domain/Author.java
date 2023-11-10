@@ -21,7 +21,6 @@ public class Author {
     private String surname;
 
     public Author() {
-
     }
 
     public Author(Long id, String forename, String surname) {

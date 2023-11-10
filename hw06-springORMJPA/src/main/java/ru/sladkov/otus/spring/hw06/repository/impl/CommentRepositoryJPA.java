@@ -36,7 +36,6 @@ public class CommentRepositoryJPA implements CommentRepository {
         return Optional.ofNullable(em.find(Comment.class, id));
     }
 
-    //TODO
     @Override
     public List<Comment> findAllByBookId(Long bookId) {
         Book book = em.find(Book.class, bookId);
