@@ -24,9 +24,9 @@ public class AuthorServiceImplTest {
     @Test
     void shouldGetAuthorByIdExisting() {
         Author author = authorService.getAuthorById(2);
-        assertThat(author.id()).isEqualTo(2);
-        assertThat(author.forename()).isEqualTo("AuthorForename2");
-        assertThat(author.surname()).isEqualTo("AuthorSurname2");
+        assertThat(author.getId()).isEqualTo(2);
+        assertThat(author.getForename()).isEqualTo("AuthorForename2");
+        assertThat(author.getSurname()).isEqualTo("AuthorSurname2");
     }
 
     @DisplayName("throw NotFoundException of non-existing author by id")

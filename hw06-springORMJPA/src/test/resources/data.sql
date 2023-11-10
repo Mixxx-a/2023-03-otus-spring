@@ -17,3 +17,11 @@ KEY (TITLE, AUTHORID, GENREID)
 VALUES ('Book1', 1, 1),
        ('Book2', 2, 2),
        ('Book3', 1, 2);
+
+MERGE INTO COMMENTS(TEXT, BOOKID)
+KEY (TEXT, BOOKID)
+VALUES ('Comment1', 1),
+       ('Comment2', 2),
+       ('Comment3', 3),
+       ('Comment4', 1),
+       ('Comment5', 1);

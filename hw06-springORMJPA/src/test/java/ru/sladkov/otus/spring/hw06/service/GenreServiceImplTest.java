@@ -24,8 +24,8 @@ public class GenreServiceImplTest {
     @Test
     void shouldGetGenreByIdExisting() {
         Genre genre = genreService.getGenreById(4);
-        assertThat(genre.id()).isEqualTo(4);
-        assertThat(genre.name()).isEqualTo("Genre4");
+        assertThat(genre.getId()).isEqualTo(4);
+        assertThat(genre.getName()).isEqualTo("Genre4");
     }
 
     @DisplayName("throw NotFoundException of non-existing genre by id")

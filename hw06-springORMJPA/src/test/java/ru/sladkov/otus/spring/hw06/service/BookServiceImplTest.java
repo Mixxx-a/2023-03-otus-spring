@@ -24,8 +24,8 @@ public class BookServiceImplTest {
     @Test
     void shouldGetBookByIdExisting() {
         Book book = bookService.getBook(2);
-        assertThat(book.id()).isEqualTo(2);
-        assertThat(book.title()).isEqualTo("Book2");
+        assertThat(book.getId()).isEqualTo(2);
+        assertThat(book.getTitle()).isEqualTo("Book2");
     }
 
     @DisplayName("throw NotFoundException of non-existing book by id")
@@ -43,8 +43,8 @@ public class BookServiceImplTest {
         Book newBook = bookService.createBook(new BookDto("Book4", 1L, 1L));
 
         Book createdBook = bookService.getBook(4);
-        assertThat(createdBook.id()).isEqualTo(4);
-        assertThat(createdBook.title()).isEqualTo("Book4");
+        assertThat(createdBook.getId()).isEqualTo(4);
+        assertThat(createdBook.getTitle()).isEqualTo("Book4");
     }
 
     @DisplayName("not create book with non-existing author and throw NotFoundException")
@@ -80,8 +80,8 @@ public class BookServiceImplTest {
         bookService.updateBook(new BookDto(3L, "Book3New", 1L, 1L));
 
         Book updatedBook = bookService.getBook(3);
-        assertThat(updatedBook.id()).isEqualTo(3);
-        assertThat(updatedBook.title()).isEqualTo("Book3New");
+        assertThat(updatedBook.getId()).isEqualTo(3);
+        assertThat(updatedBook.getTitle()).isEqualTo("Book3New");
     }
 
     @DisplayName("not update non-existing book and throw NotFoundException")
@@ -104,8 +104,8 @@ public class BookServiceImplTest {
                 .isInstanceOf(NotFoundException.class);
 
         Book book = bookService.getBook(3);
-        assertThat(book.id()).isEqualTo(3);
-        assertThat(book.title()).isEqualTo("Book3");
+        assertThat(book.getId()).isEqualTo(3);
+        assertThat(book.getTitle()).isEqualTo("Book3");
     }
 
     @DisplayName("not update book with non-existing genre and throw NotFoundException")
@@ -116,8 +116,8 @@ public class BookServiceImplTest {
                 .isInstanceOf(NotFoundException.class);
 
         Book book = bookService.getBook(3);
-        assertThat(book.id()).isEqualTo(3);
-        assertThat(book.title()).isEqualTo("Book3");
+        assertThat(book.getId()).isEqualTo(3);
+        assertThat(book.getTitle()).isEqualTo("Book3");
     }
 
     @DisplayName("delete book")

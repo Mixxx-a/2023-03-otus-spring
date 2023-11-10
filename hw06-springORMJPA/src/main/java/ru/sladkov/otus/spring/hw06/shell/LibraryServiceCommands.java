@@ -5,10 +5,13 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.sladkov.otus.spring.hw06.domain.Author;
 import ru.sladkov.otus.spring.hw06.domain.Book;
+import ru.sladkov.otus.spring.hw06.domain.Comment;
 import ru.sladkov.otus.spring.hw06.domain.Genre;
 import ru.sladkov.otus.spring.hw06.dto.BookDto;
+import ru.sladkov.otus.spring.hw06.dto.CommentDto;
 import ru.sladkov.otus.spring.hw06.service.AuthorService;
 import ru.sladkov.otus.spring.hw06.service.BookService;
+import ru.sladkov.otus.spring.hw06.service.CommentService;
 import ru.sladkov.otus.spring.hw06.service.GenreService;
 
 import java.util.List;
@@ -22,17 +25,21 @@ public class LibraryServiceCommands {
 
     private final GenreService genreService;
 
-    public LibraryServiceCommands(AuthorService authorService, BookService bookService, GenreService genreService) {
+    private final CommentService commentService;
+
+    public LibraryServiceCommands(AuthorService authorService, BookService bookService, GenreService genreService,
+                                  CommentService commentService) {
         this.authorService = authorService;
         this.bookService = bookService;
         this.genreService = genreService;
+        this.commentService = commentService;
     }
 
     @ShellMethod(value = "Create book", key = "createBook")
     public String createBook(@ShellOption String title, @ShellOption String authorId, @ShellOption String genreId) {
         BookDto bookDto = new BookDto(title, Long.parseLong(authorId), Long.parseLong(genreId));
         Book createdBook = bookService.createBook(bookDto);
-        return "New book created with id " + createdBook.id();
+        return "New book created with id " + createdBook.getId();
     }
 
     @ShellMethod(value = "Update book", key = "updateBook")
@@ -84,6 +91,38 @@ public class LibraryServiceCommands {
     public String getAllGenres() {
         List<Genre> genres = genreService.getAllGenres();
         return createStringFromList(genres);
+    }
+
+    @ShellMethod(value = "Create comment", key = "createComment")
+    public String createComment(@ShellOption String text, @ShellOption String bookId) {
+        CommentDto commentDTO = new CommentDto(text, Long.parseLong(bookId));
+        Comment createdComment = commentService.createComment(commentDTO);
+        return "New comment created with id " + createdComment.getId();
+    }
+
+    @ShellMethod(value = "Update comment", key = "updateComment")
+    public String updateComment(@ShellOption String id, @ShellOption String newText, @ShellOption String newBookId) {
+        CommentDto newCommentDto = new CommentDto(Long.parseLong(id), newText, Long.parseLong(newBookId));
+        commentService.updateComment(newCommentDto);
+        return "Comment updated successfully!";
+    }
+
+    @ShellMethod(value = "Get comment by id", key = "getCommentById")
+    public String getCommentById(@ShellOption String id) {
+        Comment comment = commentService.getComment(Long.parseLong(id));
+        return comment.toString();
+    }
+
+    @ShellMethod(value = "Get all comments by book id", key = "getAllCommentsByBookId")
+    public String getAllCommentsByBookId(@ShellOption String bookId) {
+        List<Comment> comments = commentService.getAllCommentsByBookId(Long.parseLong(bookId));
+        return createStringFromList(comments);
+    }
+
+    @ShellMethod(value = "Delete comment", key = "deleteComment")
+    public String deleteComment(@ShellOption String id) {
+        commentService.deleteComment(Long.parseLong(id));
+        return "Deleted comment if it existed";
     }
 
     private String createStringFromList(List<?> objects) {
