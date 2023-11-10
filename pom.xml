@@ -22,6 +22,7 @@
         <module>hw02-javaAnnotationConfig</module>
         <module>hw03-springBoot</module>
         <module>hw04-springShell</module>
+        <module>hw05-springJDBC</module>
     </modules>
 
     <properties>
