@@ -20,14 +20,14 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    public Genre getGenreById(long id) {
+    public Genre getById(long id) {
         return genreRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Genre with id = " + id + " is not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Genre> getAllGenres() {
+    public List<Genre> getAll() {
         return genreRepository.findAll();
     }
 }

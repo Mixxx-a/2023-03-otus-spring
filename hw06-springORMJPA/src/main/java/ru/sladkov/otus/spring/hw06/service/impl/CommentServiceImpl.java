@@ -26,53 +26,53 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Comment createComment(CommentDto commentDTO) {
-        Long bookId = commentDTO.bookId();
+    public Comment create(CommentDto commentDto) {
+        Long bookId = commentDto.bookId();
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Create comment: Book with id = " + bookId + " is not found"));
 
-        Comment comment = new Comment(null, commentDTO.text(), book);
+        Comment comment = new Comment(null, commentDto.text(), book);
         return commentRepository.save(comment);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Comment getComment(long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() ->
+    public Comment getById(long id) {
+        return commentRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Comment with id = " + id + " is not found"));
-
-        return comment.loadLazyFields();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getAllCommentsByBookId(long bookId) {
+    public List<Comment> getAllByBookId(long bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow(() ->
                 new NotFoundException("Get comments for book: book with id = " + bookId + " is not found"));
-        List<Comment> comments = commentRepository.findAllByBookId(bookId);
-        comments.forEach(Comment::loadLazyFields);
-        return comments;
+        return commentRepository.findAllByBookId(book.getId());
     }
 
     @Override
     @Transactional
-    public void updateComment(CommentDto newCommentDto) {
+    public void update(CommentDto newCommentDto) {
         Long commentId = newCommentDto.id();
         Comment existingComment = commentRepository.findById(commentId).orElseThrow(() ->
                 new NotFoundException("Update comment: Comment with id = " + commentId + " is not found"));
 
         Long newBookId = newCommentDto.bookId();
-        Book book = bookRepository.findById(newBookId)
-                .orElseThrow(() ->
-                        new NotFoundException("Update comment: Book with id = " + newBookId + " is not found"));
+        if (!newBookId.equals(existingComment.getBook().getId())) {
+            Book book = bookRepository.findById(newBookId)
+                    .orElseThrow(() ->
+                            new NotFoundException("Update comment: Book with id = " + newBookId + " is not found"));
+            existingComment.setBook(book);
+        }
 
-        Comment newComment = new Comment(existingComment.getId(), newCommentDto.text(), book);
-        commentRepository.save(newComment);
+        existingComment.setText(newCommentDto.text());
+        commentRepository.save(existingComment);
+
     }
 
     @Override
     @Transactional
-    public void deleteComment(long id) {
+    public void deleteById(long id) {
         commentRepository.deleteById(id);
     }
 }

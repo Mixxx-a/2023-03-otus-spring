@@ -6,13 +6,13 @@ import ru.sladkov.otus.spring.hw06.dto.BookDto;
 import java.util.List;
 
 public interface BookService {
-    Book createBook(BookDto bookDto);
+    Book create(BookDto bookDto);
 
-    Book getBook(long id);
+    Book getById(long id);
 
-    List<Book> getAllBooks();
+    List<Book> getAll();
 
-    void updateBook(BookDto newBookDto);
+    void update(BookDto newBookDto);
 
-    void deleteBook(long id);
+    void deleteById(long id);
 }

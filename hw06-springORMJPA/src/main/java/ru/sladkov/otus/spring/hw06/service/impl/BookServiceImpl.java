@@ -32,7 +32,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(BookDto bookDto) {
+    public Book create(BookDto bookDto) {
         Long authorId = bookDto.authorId();
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new NotFoundException("Create book: Author with id = " + authorId + " is not found"));
@@ -47,21 +47,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Book getBook(long id) {
-        Book book = bookRepository.findById(id)
+    public Book getById(long id) {
+        return bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book with id = " + id + " is not found"));
-        return book.loadLazyFields();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Book> getAllBooks() {
+    public List<Book> getAll() {
         return bookRepository.findAll();
     }
 
     @Override
     @Transactional
-    public void updateBook(BookDto newBookDto) {
+    public void update(BookDto newBookDto) {
         Long bookId = newBookDto.id();
         Book exisitingBook = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Update book: Book with id = " + bookId + " is not found"));
@@ -76,13 +75,15 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() ->
                         new NotFoundException("Update book: Genre with id = " + newGenreId + " is not found"));
 
-        Book newBook = new Book(exisitingBook.getId(), newBookDto.title(), newAuthor, newGenre);
-        bookRepository.save(newBook);
+        exisitingBook.setTitle(newBookDto.title());
+        exisitingBook.setAuthor(newAuthor);
+        exisitingBook.setGenre(newGenre);
+        bookRepository.save(exisitingBook);
     }
 
     @Override
     @Transactional
-    public void deleteBook(long id) {
+    public void deleteById(long id) {
         bookRepository.deleteById(id);
     }
 }

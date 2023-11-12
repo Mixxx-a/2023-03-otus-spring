@@ -8,20 +8,20 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.sladkov.otus.spring.hw06.domain.Book;
 import ru.sladkov.otus.spring.hw06.domain.Comment;
-import ru.sladkov.otus.spring.hw06.repository.impl.CommentRepositoryJPA;
+import ru.sladkov.otus.spring.hw06.repository.impl.JPACommentRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("CommentRepositoryJPA should")
+@DisplayName("JPACommentRepository should")
 @DataJpaTest
-@Import(CommentRepositoryJPA.class)
-public class CommentRepositoryJPATest {
+@Import(JPACommentRepository.class)
+public class JPACommentRepositoryTest {
 
     @Autowired
-    private CommentRepositoryJPA commentRepositoryJPA;
+    private JPACommentRepository JPACommentRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -29,7 +29,7 @@ public class CommentRepositoryJPATest {
     @DisplayName("return existing comment by id")
     @Test
     void shouldGetCommentByIdExisting() {
-        Optional<Comment> optComment = commentRepositoryJPA.findById(4);
+        Optional<Comment> optComment = JPACommentRepository.findById(4);
         assertThat(optComment.isPresent()).isTrue();
         Comment comment = optComment.get();
         assertThat(comment.getId()).isEqualTo(4);
@@ -40,14 +40,14 @@ public class CommentRepositoryJPATest {
     @DisplayName("return empty optional of non-existing comment by id")
     @Test
     void shouldGetCommentByIdNonExisting() {
-        Optional<Comment> optComment = commentRepositoryJPA.findById(10);
+        Optional<Comment> optComment = JPACommentRepository.findById(10);
         assertThat(optComment.isPresent()).isFalse();
     }
 
     @DisplayName("return all comments for book by bookId")
     @Test
     void shouldGetCommentsForBookByBookId() {
-        List<Comment> comments = commentRepositoryJPA.findAllByBookId(1L);
+        List<Comment> comments = JPACommentRepository.findAllByBookId(1L);
         assertThat(comments).hasSize(3);
     }
 
@@ -56,7 +56,7 @@ public class CommentRepositoryJPATest {
     void shouldSaveComment() {
         Book book = em.find(Book.class, 2);
         Comment newComment = new Comment(null, "Comment6", book);
-        commentRepositoryJPA.save(newComment);
+        JPACommentRepository.save(newComment);
 
         em.flush();
 
@@ -71,7 +71,7 @@ public class CommentRepositoryJPATest {
     void shouldUpdateComment() {
         Book newBook = em.find(Book.class, 3);
         Comment newComment = new Comment(5L, "Comment5Updated", newBook);
-        commentRepositoryJPA.save(newComment);
+        JPACommentRepository.save(newComment);
 
         em.flush();
 
@@ -84,7 +84,7 @@ public class CommentRepositoryJPATest {
     @DisplayName("delete comment by id")
     @Test
     void shouldDeleteCommentById() {
-        commentRepositoryJPA.deleteById(4);
+        JPACommentRepository.deleteById(4);
 
         em.flush();
 

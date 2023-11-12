@@ -20,14 +20,14 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    public Author getAuthorById(long id) {
+    public Author getById(long id) {
         return authorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Author with id = " + id + " is not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Author> getAllAuthors() {
+    public List<Author> getAll() {
         return authorRepository.findAll();
     }
 }

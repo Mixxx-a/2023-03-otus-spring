@@ -10,20 +10,20 @@ import ru.sladkov.otus.spring.hw06.domain.Author;
 import ru.sladkov.otus.spring.hw06.domain.Book;
 import ru.sladkov.otus.spring.hw06.domain.Comment;
 import ru.sladkov.otus.spring.hw06.domain.Genre;
-import ru.sladkov.otus.spring.hw06.repository.impl.BookRepositoryJPA;
+import ru.sladkov.otus.spring.hw06.repository.impl.JPABookRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("BookRepositoryJPA should")
+@DisplayName("JPABookRepository should")
 @DataJpaTest
-@Import(BookRepositoryJPA.class)
-public class BookRepositoryJPATest {
+@Import(JPABookRepository.class)
+public class JPABookRepositoryTest {
 
     @Autowired
-    private BookRepositoryJPA bookRepositoryJPA;
+    private JPABookRepository JPABookRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -31,7 +31,7 @@ public class BookRepositoryJPATest {
     @DisplayName("return existing book by id")
     @Test
     void shouldGetBookByIdExisting() {
-        Optional<Book> optBook = bookRepositoryJPA.findById(2);
+        Optional<Book> optBook = JPABookRepository.findById(2);
         assertThat(optBook.isPresent()).isTrue();
         Book book = optBook.get();
         assertThat(book.getId()).isEqualTo(2);
@@ -41,14 +41,14 @@ public class BookRepositoryJPATest {
     @DisplayName("return empty optional of non-existing book by id")
     @Test
     void shouldGetBookByIdNonExisting() {
-        Optional<Book> optBook = bookRepositoryJPA.findById(4);
+        Optional<Book> optBook = JPABookRepository.findById(4);
         assertThat(optBook.isPresent()).isFalse();
     }
 
     @DisplayName("return all books")
     @Test
     void shouldGetBooks() {
-        List<Book> book = bookRepositoryJPA.findAll();
+        List<Book> book = JPABookRepository.findAll();
         assertThat(book).hasSize(3);
     }
 
@@ -58,7 +58,7 @@ public class BookRepositoryJPATest {
         Author author = em.find(Author.class, 1);
         Genre genre = em.find(Genre.class, 1);
         Book newBook = new Book(null, "Book4", author, genre);
-        bookRepositoryJPA.save(newBook);
+        JPABookRepository.save(newBook);
 
         em.flush();
 
@@ -75,7 +75,7 @@ public class BookRepositoryJPATest {
         Author newAuthor = em.find(Author.class, 2);
         Genre newGenre = em.find(Genre.class, 2);
         Book newBook = new Book(3L, "Book3Updated", newAuthor, newGenre);
-        bookRepositoryJPA.save(newBook);
+        JPABookRepository.save(newBook);
 
         em.flush();
 
@@ -89,7 +89,7 @@ public class BookRepositoryJPATest {
     @DisplayName("delete book by id")
     @Test
     void shouldDeleteBookById() {
-        bookRepositoryJPA.deleteById(1);
+        JPABookRepository.deleteById(1);
 
         em.flush();
 

@@ -46,13 +46,16 @@ public class Comment {
         return book;
     }
 
-    public Comment loadLazyFields() {
-        this.book.loadLazyFields();
-        return this;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     @Override
     public String toString() {
-        return "Comment[id=" + this.id + ", text=" + this.text + ", book=" + this.book + "]";
+        return "Comment[id=" + this.id + ", text=" + this.text + ", bookId=" + this.book.getId() + "]";
     }
 }

@@ -12,18 +12,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CommentRepositoryJPA implements CommentRepository {
+public class JPACommentRepository implements CommentRepository {
 
     @PersistenceContext
     private final EntityManager em;
 
-    public CommentRepositoryJPA(EntityManager em) {
+    public JPACommentRepository(EntityManager em) {
         this.em = em;
     }
 
     @Override
     public Comment save(Comment comment) {
-        if (comment.getId() == null || comment.getId() <= 0) {
+        if (comment.getId() == null) {
             em.persist(comment);
             return comment;
         } else {
