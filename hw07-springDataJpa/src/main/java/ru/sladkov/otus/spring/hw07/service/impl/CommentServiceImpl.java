@@ -47,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getAllByBookId(long bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow(() ->
                 new NotFoundException("Get comments for book: book with id = " + bookId + " is not found"));
-        return commentRepository.findAllByBookId(book.getId());
+        return commentRepository.findByBookId(book.getId());
     }
 
     @Override
