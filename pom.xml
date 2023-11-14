@@ -23,7 +23,7 @@
         <module>hw03-springBoot</module>
         <module>hw04-springShell</module>
         <module>hw05-springJDBC</module>
-        <module>hw06-springORMJPA</module>
+        <module>hw06-springOrmJpa</module>
     </modules>
 
     <properties>
