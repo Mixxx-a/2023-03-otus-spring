@@ -5,7 +5,7 @@ import ru.sladkov.otus.spring.hw06.domain.Genre;
 import java.util.List;
 
 public interface GenreService {
-    Genre getGenreById(long id);
+    Genre getById(long id);
 
-    List<Genre> getAllGenres();
+    List<Genre> getAll();
 }

@@ -1,7 +1,8 @@
 package ru.sladkov.otus.spring.hw06.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.sladkov.otus.spring.hw06.dao.GenreDao;
+import org.springframework.transaction.annotation.Transactional;
+import ru.sladkov.otus.spring.hw06.repository.GenreRepository;
 import ru.sladkov.otus.spring.hw06.domain.Genre;
 import ru.sladkov.otus.spring.hw06.exception.NotFoundException;
 import ru.sladkov.otus.spring.hw06.service.GenreService;
@@ -11,20 +12,22 @@ import java.util.List;
 @Service
 public class GenreServiceImpl implements GenreService {
 
-    private final GenreDao genreDao;
+    private final GenreRepository genreRepository;
 
-    public GenreServiceImpl(GenreDao genreDao) {
-        this.genreDao = genreDao;
+    public GenreServiceImpl(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
     }
 
     @Override
-    public Genre getGenreById(long id) {
-        return genreDao.getById(id)
+    @Transactional(readOnly = true)
+    public Genre getById(long id) {
+        return genreRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Genre with id = " + id + " is not found"));
     }
 
     @Override
-    public List<Genre> getAllGenres() {
-        return genreDao.getAll();
+    @Transactional(readOnly = true)
+    public List<Genre> getAll() {
+        return genreRepository.findAll();
     }
 }

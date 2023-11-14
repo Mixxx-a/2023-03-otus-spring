@@ -5,7 +5,7 @@ import ru.sladkov.otus.spring.hw06.domain.Author;
 import java.util.List;
 
 public interface AuthorService {
-    Author getAuthorById(long id);
+    Author getById(long id);
 
-    List<Author> getAllAuthors();
+    List<Author> getAll();
 }

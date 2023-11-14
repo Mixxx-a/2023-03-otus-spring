@@ -23,24 +23,24 @@ public class AuthorServiceImplTest {
     @DisplayName("return existing author by id")
     @Test
     void shouldGetAuthorByIdExisting() {
-        Author author = authorService.getAuthorById(2);
-        assertThat(author.id()).isEqualTo(2);
-        assertThat(author.forename()).isEqualTo("AuthorForename2");
-        assertThat(author.surname()).isEqualTo("AuthorSurname2");
+        Author author = authorService.getById(2);
+        assertThat(author.getId()).isEqualTo(2);
+        assertThat(author.getForename()).isEqualTo("AuthorForename2");
+        assertThat(author.getSurname()).isEqualTo("AuthorSurname2");
     }
 
     @DisplayName("throw NotFoundException of non-existing author by id")
     @Test
     void throwsExceptionGetAuthorByIdNonExisting() {
         assertThatThrownBy(() -> {
-            Author author = authorService.getAuthorById(123456);
+            Author author = authorService.getById(123456);
         }).isInstanceOf(NotFoundException.class);
     }
 
     @DisplayName("return all authors")
     @Test
     void shouldGetAuthors() {
-        List<Author> authors = authorService.getAllAuthors();
+        List<Author> authors = authorService.getAll();
         assertThat(authors).hasSize(3);
     }
 }

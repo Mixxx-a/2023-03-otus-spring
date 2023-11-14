@@ -1,7 +1,8 @@
 package ru.sladkov.otus.spring.hw06.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.sladkov.otus.spring.hw06.dao.AuthorDao;
+import org.springframework.transaction.annotation.Transactional;
+import ru.sladkov.otus.spring.hw06.repository.AuthorRepository;
 import ru.sladkov.otus.spring.hw06.domain.Author;
 import ru.sladkov.otus.spring.hw06.exception.NotFoundException;
 import ru.sladkov.otus.spring.hw06.service.AuthorService;
@@ -11,20 +12,22 @@ import java.util.List;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorDao authorDao;
+    private final AuthorRepository authorRepository;
 
-    public AuthorServiceImpl(AuthorDao authorDao) {
-        this.authorDao = authorDao;
+    public AuthorServiceImpl(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     @Override
-    public Author getAuthorById(long id) {
-        return authorDao.getById(id)
+    @Transactional(readOnly = true)
+    public Author getById(long id) {
+        return authorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Author with id = " + id + " is not found"));
     }
 
     @Override
-    public List<Author> getAllAuthors() {
-        return authorDao.getAll();
+    @Transactional(readOnly = true)
+    public List<Author> getAll() {
+        return authorRepository.findAll();
     }
 }
