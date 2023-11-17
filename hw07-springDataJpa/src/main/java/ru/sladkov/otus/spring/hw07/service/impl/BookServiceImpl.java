@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sladkov.otus.spring.hw07.repository.AuthorRepository;
 import ru.sladkov.otus.spring.hw07.repository.BookRepository;
+import ru.sladkov.otus.spring.hw07.repository.CommentRepository;
 import ru.sladkov.otus.spring.hw07.repository.GenreRepository;
 import ru.sladkov.otus.spring.hw07.domain.Author;
 import ru.sladkov.otus.spring.hw07.domain.Book;
@@ -23,11 +24,14 @@ public class BookServiceImpl implements BookService {
 
     private final GenreRepository genreRepository;
 
+    private final CommentRepository commentRepository;
+
     public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
-                           GenreRepository genreRepository) {
+                           GenreRepository genreRepository, CommentRepository commentRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -84,6 +88,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(long id) {
-        bookRepository.deleteByIdWithComments(id);
+        commentRepository.deleteAllByBookId(id);
+        bookRepository.deleteById(id);
     }
 }

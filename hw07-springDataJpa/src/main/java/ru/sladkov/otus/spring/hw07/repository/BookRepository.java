@@ -7,7 +7,7 @@ import ru.sladkov.otus.spring.hw07.domain.Book;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Override
     @EntityGraph(value = "book-entity-graph")

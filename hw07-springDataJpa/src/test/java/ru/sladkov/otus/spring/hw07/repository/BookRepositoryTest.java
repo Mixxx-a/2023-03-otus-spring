@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.sladkov.otus.spring.hw07.domain.Author;
 import ru.sladkov.otus.spring.hw07.domain.Book;
-import ru.sladkov.otus.spring.hw07.domain.Comment;
 import ru.sladkov.otus.spring.hw07.domain.Genre;
 
 import java.util.List;
@@ -56,24 +55,5 @@ public class BookRepositoryTest {
     void shouldGetBooks() {
         List<Book> book = bookRepository.findAll();
         assertThat(book).hasSize(3);
-    }
-
-    @DisplayName("delete book by id with comments")
-    @Test
-    void shouldDeleteBookByIdWithComments() {
-        bookRepository.deleteByIdWithComments(1L);
-
-        em.flush();
-
-        Book book = em.find(Book.class, 1);
-        assertThat(book).isNull();
-
-        //Check that comments are also deleted
-        Comment comment1 = em.find(Comment.class, 1);
-        assertThat(comment1).isNull();
-        Comment comment2 = em.find(Comment.class, 4);
-        assertThat(comment2).isNull();
-        Comment comment3 = em.find(Comment.class, 5);
-        assertThat(comment3).isNull();
     }
 }
