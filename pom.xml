@@ -26,6 +26,7 @@
         <module>hw06-springOrmJpa</module>
         <module>hw07-springDataJpa</module>
         <module>hw08-springDataMongoDB</module>
+        <module>hw09-springMVC</module>
     </modules>
 
     <properties>
