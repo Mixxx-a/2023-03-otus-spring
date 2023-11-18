@@ -25,6 +25,7 @@
         <module>hw05-springJDBC</module>
         <module>hw06-springOrmJpa</module>
         <module>hw07-springDataJpa</module>
+        <module>hw08-springDataMongoDB</module>
     </modules>
 
     <properties>
