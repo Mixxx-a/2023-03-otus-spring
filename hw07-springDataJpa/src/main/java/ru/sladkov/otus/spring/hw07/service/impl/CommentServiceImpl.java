@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.sladkov.otus.spring.hw07.domain.Book;
 import ru.sladkov.otus.spring.hw07.domain.Comment;
 import ru.sladkov.otus.spring.hw07.dto.CommentDto;
+import ru.sladkov.otus.spring.hw07.exception.CommentModificationException;
 import ru.sladkov.otus.spring.hw07.exception.NotFoundException;
 import ru.sladkov.otus.spring.hw07.repository.BookRepository;
 import ru.sladkov.otus.spring.hw07.repository.CommentRepository;
@@ -47,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getAllByBookId(long bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow(() ->
                 new NotFoundException("Get comments for book: book with id = " + bookId + " is not found"));
-        return commentRepository.findAllByBookId(book.getId());
+        return commentRepository.findByBookId(book.getId());
     }
 
     @Override
@@ -59,10 +60,7 @@ public class CommentServiceImpl implements CommentService {
 
         Long newBookId = newCommentDto.bookId();
         if (!newBookId.equals(existingComment.getBook().getId())) {
-            Book book = bookRepository.findById(newBookId)
-                    .orElseThrow(() ->
-                            new NotFoundException("Update comment: Book with id = " + newBookId + " is not found"));
-            existingComment.setBook(book);
+            throw new CommentModificationException("Update comment: can not assign this comment to different book");
         }
 
         existingComment.setText(newCommentDto.text());

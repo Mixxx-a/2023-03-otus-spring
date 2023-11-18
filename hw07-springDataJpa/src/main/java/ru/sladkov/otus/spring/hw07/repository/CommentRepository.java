@@ -1,17 +1,14 @@
 package ru.sladkov.otus.spring.hw07.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.sladkov.otus.spring.hw07.domain.Comment;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface CommentRepository {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Comment save(Comment comment);
+    List<Comment> findByBookId(Long bookId);
 
-    Optional<Comment> findById(long id);
+    void deleteAllByBookId(Long bookId);
 
-    List<Comment> findAllByBookId(Long bookId);
-
-    void deleteById(long id);
 }
