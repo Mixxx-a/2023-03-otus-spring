@@ -37,7 +37,7 @@ public class LibraryServiceCommands {
 
     @ShellMethod(value = "Create book", key = "createBook")
     public String createBook(@ShellOption String title, @ShellOption String authorId, @ShellOption String genreId) {
-        BookDto bookDto = new BookDto(title, Long.parseLong(authorId), Long.parseLong(genreId));
+        BookDto bookDto = new BookDto(title, authorId, genreId);
         Book createdBook = bookService.create(bookDto);
         return "New book created with id " + createdBook.getId();
     }
@@ -45,15 +45,15 @@ public class LibraryServiceCommands {
     @ShellMethod(value = "Update book", key = "updateBook")
     public String updateBook(@ShellOption String id, @ShellOption String newTitle,
                              @ShellOption String newAuthorId, @ShellOption String newGenreId) {
-        BookDto newBookDto = new BookDto(Long.parseLong(id), newTitle, Long.parseLong(newAuthorId),
-                Long.parseLong(newGenreId));
+        BookDto newBookDto = new BookDto(id, newTitle, newAuthorId,
+                newGenreId);
         bookService.update(newBookDto);
         return "Book updated successfully!";
     }
 
     @ShellMethod(value = "Get book by id", key = "getBookById")
     public String getBookById(@ShellOption String id) {
-        Book book = bookService.getById(Long.parseLong(id));
+        Book book = bookService.getById(id);
         return book.toString();
     }
 
@@ -65,13 +65,13 @@ public class LibraryServiceCommands {
 
     @ShellMethod(value = "Delete book", key = "deleteBook")
     public String deleteBook(@ShellOption String id) {
-        bookService.deleteById(Long.parseLong(id));
+        bookService.deleteById(id);
         return "Deleted book if it existed";
     }
 
     @ShellMethod(value = "Get author by id", key = "getAuthorById")
     public String getAuthorById(@ShellOption String id) {
-        Author author = authorService.getById(Long.parseLong(id));
+        Author author = authorService.getById(id);
         return author.toString();
     }
 
@@ -83,7 +83,7 @@ public class LibraryServiceCommands {
 
     @ShellMethod(value = "Get genre by id", key = "getGenreById")
     public String getGenreById(@ShellOption String id) {
-        Genre genre = genreService.getById(Long.parseLong(id));
+        Genre genre = genreService.getById(id);
         return genre.toString();
     }
 
@@ -95,33 +95,33 @@ public class LibraryServiceCommands {
 
     @ShellMethod(value = "Create comment", key = "createComment")
     public String createComment(@ShellOption String text, @ShellOption String bookId) {
-        CommentDto commentDTO = new CommentDto(text, Long.parseLong(bookId));
+        CommentDto commentDTO = new CommentDto(text, bookId);
         Comment createdComment = commentService.create(commentDTO);
         return "New comment created with id " + createdComment.getId();
     }
 
     @ShellMethod(value = "Update comment", key = "updateComment")
     public String updateComment(@ShellOption String id, @ShellOption String newText, @ShellOption String newBookId) {
-        CommentDto newCommentDto = new CommentDto(Long.parseLong(id), newText, Long.parseLong(newBookId));
+        CommentDto newCommentDto = new CommentDto(id, newText, newBookId);
         commentService.update(newCommentDto);
         return "Comment updated successfully!";
     }
 
     @ShellMethod(value = "Get comment by id", key = "getCommentById")
     public String getCommentById(@ShellOption String id) {
-        Comment comment = commentService.getById(Long.parseLong(id));
+        Comment comment = commentService.getById(id);
         return comment.toString();
     }
 
     @ShellMethod(value = "Get all comments by book id", key = "getAllCommentsByBookId")
     public String getAllCommentsByBookId(@ShellOption String bookId) {
-        List<Comment> comments = commentService.getAllByBookId(Long.parseLong(bookId));
+        List<Comment> comments = commentService.getAllByBookId(bookId);
         return createStringFromList(comments);
     }
 
     @ShellMethod(value = "Delete comment", key = "deleteComment")
     public String deleteComment(@ShellOption String id) {
-        commentService.deleteById(Long.parseLong(id));
+        commentService.deleteById(id);
         return "Deleted comment if it existed";
     }
 

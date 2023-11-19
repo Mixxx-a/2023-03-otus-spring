@@ -1,31 +1,28 @@
 package ru.sladkov.otus.spring.hw08.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "genres")
+@Document(collection = "genres")
 public class Genre {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "name")
     private String name;
 
     public Genre() {
     }
 
-    public Genre(Long id, String name) {
+    public Genre(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Long getId() {
+    public Genre(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
         return id;
     }
 

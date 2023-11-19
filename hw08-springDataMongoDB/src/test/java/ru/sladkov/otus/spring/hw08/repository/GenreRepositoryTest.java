@@ -3,9 +3,7 @@ package ru.sladkov.otus.spring.hw08.repository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import ru.sladkov.otus.spring.hw08.domain.Genre;
 
 import java.util.Optional;
@@ -13,8 +11,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("GenreRepository should")
-@DataJpaTest
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@DataMongoTest
 public class GenreRepositoryTest {
 
     @Autowired

@@ -23,8 +23,8 @@ public class GenreServiceImplTest {
     @DisplayName("return existing genre by id")
     @Test
     void shouldGetGenreByIdExisting() {
-        Genre genre = genreService.getById(4);
-        assertThat(genre.getId()).isEqualTo(4);
+        Genre genre = genreService.getById("4");
+        assertThat(genre.getId()).isEqualTo("4");
         assertThat(genre.getName()).isEqualTo("Genre4");
     }
 
@@ -32,7 +32,7 @@ public class GenreServiceImplTest {
     @Test
     void shouldGetGenreByIdNonExisting() {
         assertThatThrownBy(() -> {
-            Genre genre = genreService.getById(123456);
+            Genre genre = genreService.getById("123456");
         }).isInstanceOf(NotFoundException.class);
     }
 

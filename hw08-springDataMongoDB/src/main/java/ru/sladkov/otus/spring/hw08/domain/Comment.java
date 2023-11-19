@@ -1,40 +1,38 @@
 package ru.sladkov.otus.spring.hw08.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "comments")
+@Document(collection = "comments")
 public class Comment {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "text")
+    @Field(name = "text")
     private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookid")
+    @DBRef
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "bookid")
     private Book book;
 
     public Comment() {
     }
 
-    public Comment(Long id, String text, Book book) {
+    public Comment(String id, String text, Book book) {
         this.id = id;
         this.text = text;
         this.book = book;
     }
 
-    public Long getId() {
+    public Comment(String text, Book book) {
+        this.text = text;
+        this.book = book;
+    }
+
+    public String getId() {
         return id;
     }
 
