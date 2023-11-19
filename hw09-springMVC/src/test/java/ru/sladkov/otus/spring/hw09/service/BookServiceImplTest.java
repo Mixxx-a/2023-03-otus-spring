@@ -40,7 +40,7 @@ public class BookServiceImplTest {
     @Test
     @Transactional
     void shouldCreateBook() {
-        Book newBook = bookService.create(new BookDto("Book4", 1L, 1L));
+        Book newBook = bookService.create(new BookDto(4L, "Book4", 1L, 1L));
 
         Book createdBook = bookService.getById(4);
         assertThat(createdBook.getId()).isEqualTo(4);
@@ -52,7 +52,7 @@ public class BookServiceImplTest {
     @Transactional
     void shouldNotCreateBookNonExistingAuthor() {
         assertThatThrownBy(() -> {
-            Book newBook = bookService.create(new BookDto("Book4", 123L, 1L));
+            Book newBook = bookService.create(new BookDto(4L, "Book4", 123L, 1L));
         }).isInstanceOf(NotFoundException.class);
 
         assertThatThrownBy(() -> {
@@ -65,7 +65,7 @@ public class BookServiceImplTest {
     @Transactional
     void shouldNotCreateBookNonExistingGenre() {
         assertThatThrownBy(() -> {
-            Book newBook = bookService.create(new BookDto("Book4", 1L, 123L));
+            Book newBook = bookService.create(new BookDto(4L, "Book4", 1L, 123L));
         }).isInstanceOf(NotFoundException.class);
 
         assertThatThrownBy(() -> {
