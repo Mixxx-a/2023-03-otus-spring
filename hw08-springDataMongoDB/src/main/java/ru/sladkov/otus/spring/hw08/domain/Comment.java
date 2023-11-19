@@ -14,8 +14,6 @@ public class Comment {
     private String text;
 
     @DBRef
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "bookid")
     private Book book;
 
     public Comment() {

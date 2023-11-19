@@ -5,8 +5,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "books")
-//@NamedEntityGraph(name = "book-entity-graph",
-//        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
 public class Book {
     @Id
     private String id;
@@ -14,13 +12,9 @@ public class Book {
     private String title;
 
     @DBRef
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "authorid")
     private Author author;
 
     @DBRef
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "genreid")
     private Genre genre;
 
     public Book() {
