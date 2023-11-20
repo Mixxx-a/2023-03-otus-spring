@@ -28,9 +28,7 @@ public class Book {
     }
 
     public Book(String title, Author author, Genre genre) {
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
+        this(null, title, author, genre);
     }
 
     public String getId() {

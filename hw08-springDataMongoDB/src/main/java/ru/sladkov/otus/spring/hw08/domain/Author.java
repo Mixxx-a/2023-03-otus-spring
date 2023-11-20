@@ -22,8 +22,7 @@ public class Author {
     }
 
     public Author(String forename, String surname) {
-        this.forename = forename;
-        this.surname = surname;
+        this(null, forename, surname);
     }
 
     public String getId() {

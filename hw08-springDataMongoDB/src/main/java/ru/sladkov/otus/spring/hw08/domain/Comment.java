@@ -3,14 +3,12 @@ package ru.sladkov.otus.spring.hw08.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "comments")
 public class Comment {
     @Id
     private String id;
 
-    @Field(name = "text")
     private String text;
 
     @DBRef
@@ -26,8 +24,7 @@ public class Comment {
     }
 
     public Comment(String text, Book book) {
-        this.text = text;
-        this.book = book;
+        this(null, text, book);
     }
 
     public String getId() {
@@ -44,10 +41,6 @@ public class Comment {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
     }
 
     @Override
