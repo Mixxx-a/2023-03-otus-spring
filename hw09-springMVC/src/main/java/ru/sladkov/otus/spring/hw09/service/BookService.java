@@ -1,18 +1,19 @@
 package ru.sladkov.otus.spring.hw09.service;
 
-import ru.sladkov.otus.spring.hw09.domain.Book;
+import ru.sladkov.otus.spring.hw09.dto.BookCreateDto;
 import ru.sladkov.otus.spring.hw09.dto.BookDto;
+import ru.sladkov.otus.spring.hw09.dto.BookUpdateDto;
 
 import java.util.List;
 
 public interface BookService {
-    Book create(BookDto bookDto);
+    BookDto create(BookCreateDto bookCreateDto);
 
-    Book getById(long id);
+    BookDto getById(long id);
 
-    List<Book> getAll();
+    List<BookDto> getAll();
 
-    void update(BookDto newBookDto);
+    BookDto update(BookUpdateDto bookUpdateDto);
 
     void deleteById(long id);
 }

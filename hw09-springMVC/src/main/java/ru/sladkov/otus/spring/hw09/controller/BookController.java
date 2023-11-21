@@ -1,5 +1,6 @@
 package ru.sladkov.otus.spring.hw09.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,9 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.sladkov.otus.spring.hw09.domain.Author;
-import ru.sladkov.otus.spring.hw09.domain.Book;
 import ru.sladkov.otus.spring.hw09.domain.Genre;
+import ru.sladkov.otus.spring.hw09.dto.BookCreateDto;
 import ru.sladkov.otus.spring.hw09.dto.BookDto;
+import ru.sladkov.otus.spring.hw09.dto.BookUpdateDto;
 import ru.sladkov.otus.spring.hw09.service.AuthorService;
 import ru.sladkov.otus.spring.hw09.service.BookService;
 import ru.sladkov.otus.spring.hw09.service.GenreService;
@@ -34,15 +36,15 @@ public class BookController {
 
     @GetMapping({"/", "/books"})
     public String booksPage(Model model) {
-        List<Book> books = bookService.getAll();
+        List<BookDto> books = bookService.getAll();
         model.addAttribute("books", books);
         return "list";
     }
 
     @GetMapping("/book")
     public String bookDetailsPage(@RequestParam("id") long id, Model model) {
-        Book book = bookService.getById(id);
-        model.addAttribute("book", book);
+        BookDto bookDto = bookService.getById(id);
+        model.addAttribute("book", bookDto);
         return "details";
     }
 
@@ -57,26 +59,26 @@ public class BookController {
     }
 
     @PostMapping("/book/create")
-    public String createBook(BookDto bookDto) {
-        bookService.create(bookDto);
+    public String createBook(@Valid BookCreateDto bookCreateDto) {
+        bookService.create(bookCreateDto);
         return "redirect:/";
     }
 
     @GetMapping("/book/edit")
     public String bookEditPage(@RequestParam("id") long id, Model model) {
-        Book book = bookService.getById(id);
+        BookDto bookDto = bookService.getById(id);
         List<Author> authors = authorService.getAll();
         List<Genre> genres = genreService.getAll();
 
-        model.addAttribute("book", book);
+        model.addAttribute("book", bookDto);
         model.addAttribute("authors", authors);
         model.addAttribute("genres", genres);
         return "edit";
     }
 
     @PutMapping("/book/edit")
-    public String updateBook(BookDto bookDto) {
-        bookService.update(bookDto);
+    public String updateBook(@Valid BookUpdateDto bookUpdateDto) {
+        bookService.update(bookUpdateDto);
         return "redirect:/";
     }
 
