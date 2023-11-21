@@ -183,7 +183,7 @@ public class BookControllerTest {
                 .andExpect(status().is4xxClientError());
         mvc.perform(post("/book/edit?id=1&title=Updated title 1&authorId=2"))
                 .andExpect(status().is4xxClientError());
-        verify(bookService, times(0)).create(ArgumentMatchers.any());
+        verify(bookService, times(0)).update(ArgumentMatchers.any());
     }
 
     @Test
