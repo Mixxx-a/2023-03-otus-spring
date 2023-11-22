@@ -1,8 +1,8 @@
 package ru.sladkov.otus.spring.hw08.dto;
 
-public record BookDto(Long id, String title, Long authorId, Long genreId) {
+public record BookDto(String id, String title, String authorId, String genreId) {
 
-    public BookDto(String title, Long authorId, Long genreId) {
+    public BookDto(String title, String authorId, String genreId) {
         this(null, title, authorId, genreId);
     }
 }

@@ -38,6 +38,9 @@
         <spring-shell.version>3.0.1</spring-shell.version>
         <logback.version>1.4.6</logback.version>
 
+        <flapdoodle.version>4.10.1</flapdoodle.version>
+        <mongock.version>4.3.8</mongock.version>
+
         <junit.version>5.9.2</junit.version>
         <mockito.version>5.2.0</mockito.version>
         <assertj.version>3.24.2</assertj.version>
@@ -60,6 +63,28 @@
                 <groupId>org.springframework.shell</groupId>
                 <artifactId>spring-shell-starter</artifactId>
                 <version>${spring-shell.version}</version>
+            </dependency>
+
+            <!-- MongoDB -->
+            <dependency>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                <version>${flapdoodle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
+                <version>${flapdoodle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.cloudyrock.mongock</groupId>
+                <artifactId>mongock-spring-v5</artifactId>
+                <version>${mongock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.cloudyrock.mongock</groupId>
+                <artifactId>mongodb-springdata-v3-driver</artifactId>
+                <version>${mongock.version}</version>
             </dependency>
 
             <!-- Logging -->

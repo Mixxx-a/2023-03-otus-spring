@@ -37,11 +37,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book create(BookDto bookDto) {
-        Long authorId = bookDto.authorId();
+        String authorId = bookDto.authorId();
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new NotFoundException("Create book: Author with id = " + authorId + " is not found"));
 
-        Long genreId = bookDto.genreId();
+        String genreId = bookDto.genreId();
         Genre genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new NotFoundException("Create book: Genre with id = " + genreId + " is not found"));
 
@@ -51,7 +51,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Book getById(long id) {
+    public Book getById(String id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book with id = " + id + " is not found"));
     }
@@ -65,16 +65,16 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void update(BookDto newBookDto) {
-        Long bookId = newBookDto.id();
+        String bookId = newBookDto.id();
         Book exisitingBook = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Update book: Book with id = " + bookId + " is not found"));
 
-        Long newAuthorId = newBookDto.authorId();
+        String newAuthorId = newBookDto.authorId();
         Author newAuthor = authorRepository.findById(newAuthorId)
                 .orElseThrow(() ->
                         new NotFoundException("Update book: Author with id = " + newAuthorId + " is not found"));
 
-        Long newGenreId = newBookDto.genreId();
+        String newGenreId = newBookDto.genreId();
         Genre newGenre = genreRepository.findById(newGenreId)
                 .orElseThrow(() ->
                         new NotFoundException("Update book: Genre with id = " + newGenreId + " is not found"));
@@ -87,7 +87,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteAllByBookId(id);
         bookRepository.deleteById(id);
     }
