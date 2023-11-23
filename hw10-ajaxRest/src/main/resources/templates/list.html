@@ -23,6 +23,52 @@
             width: 50px;
         }
     </style>
+    <script>
+        window.onload = async () => {
+            const booksTableBody = document.getElementById("booksTableBody")
+
+            const response = await fetch("/api/books");
+            const books = await response.json();
+            books.forEach(book => {
+                const row = booksTableBody.insertRow()
+                row.id = "bookRow" + book.id
+
+                row.insertCell(0).innerHTML = book.id;
+
+                const cell2 = row.insertCell(1);
+                const detailsLink = document.createElement('a');
+                detailsLink.innerHTML = book.title;
+                detailsLink.href = "/book?id=" + book.id;
+                cell2.appendChild(detailsLink);
+
+                const cell3 = row.insertCell(2);
+                const editLink = document.createElement('a');
+                editLink.innerHTML = "Edit";
+                editLink.href = "/book/edit?id=" + book.id;
+                cell3.appendChild(editLink);
+
+                const cell4 = row.insertCell(3);
+                const deleteButton = document.createElement('button');
+                deleteButton.innerHTML = "Delete";
+                deleteButton.id = "deleteButton" + book.id;
+                deleteButton.onclick = deleteBook;
+                cell4.appendChild(deleteButton);
+            });
+        }
+
+        async function deleteBook(pointerEvent) {
+            const bookId = pointerEvent.currentTarget.id
+                .replace("deleteButton", "")
+            const response = await fetch("/api/books/" + bookId, {
+                method: "DELETE"
+            });
+            const result = await response;
+            if (result.status === 200) {
+                const row = document.getElementById("bookRow" + bookId);
+                row.remove();
+            }
+        }
+    </script>
 </head>
 <body>
 <a href="create.html" th:href="@{/book/create}">Create new book</a>
@@ -30,28 +76,15 @@
 
 <table class="books">
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Edit</th>
-        <th>Delete</th>
-    </tr>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
     </thead>
-    <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}">1</td>
-        <td>
-            <a href="details.html" th:href="@{/book(id=${book.id})}" th:text="${book.title}">Book Title</a>
-        </td>
-        <td>
-            <a href="edit.html" th:href="@{/book/edit(id=${book.id})}">Edit</a>
-        </td>
-        <td>
-            <form action=# th:method="delete" th:action="@{/book/delete(id=${book.id})}">
-                <input type="submit" value="Delete">
-            </form>
-        </td>
-    </tr>
+    <tbody id="booksTableBody">
+
     </tbody>
 </table>
 </body>

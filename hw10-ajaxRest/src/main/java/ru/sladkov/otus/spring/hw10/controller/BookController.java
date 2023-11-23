@@ -1,91 +1,52 @@
 package ru.sladkov.otus.spring.hw10.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.sladkov.otus.spring.hw10.domain.Author;
-import ru.sladkov.otus.spring.hw10.domain.Genre;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.sladkov.otus.spring.hw10.dto.BookCreateDto;
 import ru.sladkov.otus.spring.hw10.dto.BookDto;
 import ru.sladkov.otus.spring.hw10.dto.BookUpdateDto;
-import ru.sladkov.otus.spring.hw10.service.AuthorService;
 import ru.sladkov.otus.spring.hw10.service.BookService;
-import ru.sladkov.otus.spring.hw10.service.GenreService;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class BookController {
 
     private final BookService bookService;
 
-    private final AuthorService authorService;
-
-    private final GenreService genreService;
-
-    public BookController(BookService bookService, AuthorService authorService, GenreService genreService) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
-        this.authorService = authorService;
-        this.genreService = genreService;
     }
 
-    @GetMapping({"/", "/books"})
-    public String booksPage(Model model) {
-        List<BookDto> books = bookService.getAll();
-        model.addAttribute("books", books);
-        return "list";
+    @GetMapping("/api/books")
+    public List<BookDto> getAllBooks() {
+        return bookService.getAll();
     }
 
-    @GetMapping("/book")
-    public String bookDetailsPage(@RequestParam("id") long id, Model model) {
-        BookDto bookDto = bookService.getById(id);
-        model.addAttribute("book", bookDto);
-        return "details";
+    @GetMapping("/api/books/{id}")
+    public BookDto getBook(@PathVariable("id") long id) {
+        return bookService.getById(id);
     }
 
-    @GetMapping("/book/create")
-    public String bookCreatePage(Model model) {
-        List<Author> authors = authorService.getAll();
-        List<Genre> genres = genreService.getAll();
-
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
-        return "create";
+    @PostMapping("/api/books")
+    public BookDto createBook(@RequestBody @Valid BookCreateDto bookCreateDto) {
+        return bookService.create(bookCreateDto);
     }
 
-    @PostMapping("/book/create")
-    public String createBook(@Valid BookCreateDto bookCreateDto) {
-        bookService.create(bookCreateDto);
-        return "redirect:/";
+    @PutMapping("/api/books/{id}")
+    public BookDto updateBook(@PathVariable("id") long id, @RequestBody @Valid BookUpdateDto bookUpdateDto) {
+        return bookService.update(bookUpdateDto);
     }
 
-    @GetMapping("/book/edit")
-    public String bookEditPage(@RequestParam("id") long id, Model model) {
-        BookDto bookDto = bookService.getById(id);
-        List<Author> authors = authorService.getAll();
-        List<Genre> genres = genreService.getAll();
-
-        model.addAttribute("book", bookDto);
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
-        return "edit";
-    }
-
-    @PutMapping("/book/edit")
-    public String updateBook(@Valid BookUpdateDto bookUpdateDto) {
-        bookService.update(bookUpdateDto);
-        return "redirect:/";
-    }
-
-    @DeleteMapping("/book/delete")
-    public String deleteBook(Long id) {
+    @DeleteMapping("/api/books/{id}")
+    public void deleteBook(@PathVariable("id") long id) {
         bookService.deleteById(id);
-        return "redirect:/";
     }
 
 }

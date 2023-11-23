@@ -2,19 +2,15 @@ package ru.sladkov.otus.spring.hw10.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.sladkov.otus.spring.hw10.domain.Author;
-import ru.sladkov.otus.spring.hw10.domain.Genre;
 import ru.sladkov.otus.spring.hw10.dto.BookCreateDto;
 import ru.sladkov.otus.spring.hw10.dto.BookDto;
 import ru.sladkov.otus.spring.hw10.dto.BookUpdateDto;
-import ru.sladkov.otus.spring.hw10.service.AuthorService;
 import ru.sladkov.otus.spring.hw10.service.BookService;
-import ru.sladkov.otus.spring.hw10.service.GenreService;
 
 import java.util.List;
 
@@ -36,161 +32,107 @@ public class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-    @MockBean
-    private AuthorService authorService;
-
-    @MockBean
-    private GenreService genreService;
-
-    private final List<Author> authors = List.of(
-            new Author(1L, "Forename1", "Surname1"),
-            new Author(2L, "Forename2", "Surname2")
-    );
-
-    private final List<Genre> genres = List.of(
-            new Genre(1L, "Genre1"),
-            new Genre(2L, "Genre2")
-    );
-
     private final List<BookDto> bookDtos = List.of(
             new BookDto()
                     .setId(1L)
                     .setTitle("Book title 1")
-                    .setAuthorId(authors.get(0).getId())
-                    .setAuthorInfo(authors.get(0).toString())
-                    .setGenreId(genres.get(0).getId())
-                    .setGenreInfo(genres.get(0).toString()),
+                    .setAuthorId(1L)
+                    .setAuthorInfo("Author 1")
+                    .setGenreId(1L)
+                    .setGenreInfo("Genre 1"),
             new BookDto()
                     .setId(2L)
                     .setTitle("Book title 2")
-                    .setAuthorId(authors.get(1).getId())
-                    .setAuthorInfo(authors.get(1).toString())
-                    .setGenreId(genres.get(1).getId())
-                    .setGenreInfo(genres.get(1).toString()),
+                    .setAuthorId(2L)
+                    .setAuthorInfo("Author 2")
+                    .setGenreId(2L)
+                    .setGenreInfo("Genre 2"),
             new BookDto()
                     .setId(3L)
                     .setTitle("Book title 3")
-                    .setAuthorId(authors.get(0).getId())
-                    .setAuthorInfo(authors.get(0).toString())
-                    .setGenreId(genres.get(1).getId())
-                    .setGenreInfo(genres.get(1).toString())
+                    .setAuthorId(1L)
+                    .setAuthorInfo("Author 1")
+                    .setGenreId(2L)
+                    .setGenreInfo("Genre 2")
     );
 
     @Test
-    @DisplayName("correctly return books page")
-    void shouldReturnBooksPage() throws Exception {
+    @DisplayName("correctly return all books")
+    void shouldReturnBooks() throws Exception {
         given(bookService.getAll()).willReturn(bookDtos);
 
-        mvc.perform(get("/books"))
+        mvc.perform(get("/api/books"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(bookDtos.get(0).title())))
-                .andExpect(content().string(containsString(bookDtos.get(1).title())))
-                .andExpect(content().string(containsString(bookDtos.get(2).title())));
-
-        mvc.perform(get("/"))
-                .andExpect(status().isOk());
+                .andExpect(content().string(containsString(bookDtos.get(0).getId().toString())))
+                .andExpect(content().string(containsString(bookDtos.get(0).getTitle())))
+                .andExpect(content().string(containsString(bookDtos.get(1).getId().toString())))
+                .andExpect(content().string(containsString(bookDtos.get(1).getTitle())))
+                .andExpect(content().string(containsString(bookDtos.get(2).getId().toString())))
+                .andExpect(content().string(containsString(bookDtos.get(2).getTitle())));
     }
 
     @Test
-    @DisplayName("correctly return book details page")
-    void shouldReturnBookDetailsPage() throws Exception {
-        given(bookService.getById(1L)).willReturn(bookDtos.get(0));
+    @DisplayName("correctly return selected book")
+    void shouldReturnBook() throws Exception {
+        given(bookService.getById(2)).willReturn(bookDtos.get(1));
 
-        mvc.perform(get("/book?id=1"))
+        mvc.perform(get("/api/books/2"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(bookDtos.get(0).title())));
+                .andExpect(content().string(containsString(bookDtos.get(1).getId().toString())))
+                .andExpect(content().string(containsString(bookDtos.get(1).getTitle())));
     }
 
     @Test
-    @DisplayName("correctly return create book page")
-    void shouldReturnCreateBookPage() throws Exception {
-        given(authorService.getAll()).willReturn(authors);
-        given(genreService.getAll()).willReturn(genres);
+    @DisplayName("correctly create book")
+    void shouldCreateBook() throws Exception {
+        BookCreateDto bookCreateDto = new BookCreateDto("New book title", 2L, 2L);
+        BookDto createdBookDto = new BookDto()
+                .setId(4L)
+                .setTitle("New book title")
+                .setAuthorId(1L)
+                .setAuthorInfo("Author 1")
+                .setGenreId(1L)
+                .setGenreInfo("Genre 1");
+        given(bookService.create(bookCreateDto)).willReturn(createdBookDto);
 
-        mvc.perform(get("/book/create"))
+        mvc.perform(post("/api/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"New book title\",\"authorId\":\"2\",\"genreId\":\"2\"}"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(authors.get(0).getForename())))
-                .andExpect(content().string(containsString(authors.get(0).getSurname())))
-                .andExpect(content().string(containsString(authors.get(1).getForename())))
-                .andExpect(content().string(containsString(authors.get(1).getSurname())))
-                .andExpect(content().string(containsString(genres.get(0).getName())))
-                .andExpect(content().string(containsString(genres.get(1).getName())));
-    }
-
-    @Test
-    @DisplayName("correctly create new book")
-    void shouldCreateNewBook() throws Exception {
-        BookCreateDto bookCreateDto = new BookCreateDto("New book title", 1L, 1L);
-
-        mvc.perform(post("/book/create?title=New book title&authorId=1&genreId=1"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(content().string(containsString(createdBookDto.getId().toString())))
+                .andExpect(content().string(containsString(createdBookDto.getTitle())));
         verify(bookService, times(1)).create(bookCreateDto);
     }
 
     @Test
-    @DisplayName("not create new book when invalid data is passed")
-    void shouldNotCreateNewBookInvalid() throws Exception {
-        mvc.perform(post("/book/create"))
-                .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/create?authorId=1&genreId=1"))
-                .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/create?title=New book title&genreId=1"))
-                .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/create?title=New book title&authorId=1"))
-                .andExpect(status().is4xxClientError());
-        verify(bookService, times(0)).create(ArgumentMatchers.any());
-    }
+    @DisplayName("correctly update selected book")
+    void shouldUpdateBook() throws Exception {
+        BookUpdateDto bookUpdateDto = new BookUpdateDto(1L, "Updated title", 2L, 2L);
+        BookDto updatedBookDto = new BookDto()
+                .setId(1L)
+                .setTitle("Updated title")
+                .setAuthorId(2L)
+                .setAuthorInfo("Author 2")
+                .setGenreId(2L)
+                .setGenreInfo("Genre 2");
+        given(bookService.update(bookUpdateDto)).willReturn(updatedBookDto);
 
-    @Test
-    @DisplayName("correctly return edit book page")
-    void shouldReturnEditBookPage() throws Exception {
-        given(bookService.getById(1L)).willReturn(bookDtos.get(0));
-        given(authorService.getAll()).willReturn(authors);
-        given(genreService.getAll()).willReturn(genres);
-
-        mvc.perform(get("/book/edit?id=1"))
+        mvc.perform(put("/api/books/1")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":\"1\",\"title\":\"Updated title\",\"authorId\":\"2\",\"genreId\":\"2\"}"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(bookDtos.get(0).title())))
-                .andExpect(content().string(containsString(authors.get(0).getForename())))
-                .andExpect(content().string(containsString(authors.get(0).getForename())))
-                .andExpect(content().string(containsString(authors.get(0).getSurname())))
-                .andExpect(content().string(containsString(authors.get(1).getForename())))
-                .andExpect(content().string(containsString(authors.get(1).getSurname())))
-                .andExpect(content().string(containsString(genres.get(0).getName())))
-                .andExpect(content().string(containsString(genres.get(1).getName())));
-    }
-
-    @Test
-    @DisplayName("correctly edit book")
-    void shouldEditBook() throws Exception {
-        BookUpdateDto bookUpdateDto = new BookUpdateDto(1L, "Updated title 1", 2L, 2L);
-
-        mvc.perform(put("/book/edit?id=1&title=Updated title 1&authorId=2&genreId=2"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(content().string(containsString(updatedBookDto.getId().toString())))
+                .andExpect(content().string(containsString(updatedBookDto.getTitle())));
         verify(bookService, times(1)).update(bookUpdateDto);
-    }
-
-    @Test
-    @DisplayName("not edit book when invalid data is passed")
-    void shouldNotEditBookInvalid() throws Exception {
-        mvc.perform(post("/book/edit"))
-                .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?title=Updated title 1&authorId=2&genreId=2"))
-                .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?id=1&authorId=2&genreId=2"))
-                .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?id=1&title=Updated title 1&genreId=2"))
-                .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?id=1&title=Updated title 1&authorId=2"))
-                .andExpect(status().is4xxClientError());
-        verify(bookService, times(0)).update(ArgumentMatchers.any());
     }
 
     @Test
     @DisplayName("correctly delete book")
     void shouldDeleteBook() throws Exception {
-        mvc.perform(delete("/book/delete?id=2"))
-                .andExpect(status().is3xxRedirection());
+        mvc.perform(delete("/api/books/2"))
+                .andExpect(status().isOk());
         verify(bookService, times(1)).deleteById(2);
     }
 }

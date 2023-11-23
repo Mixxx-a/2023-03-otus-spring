@@ -25,8 +25,8 @@ public class BookServiceImplTest {
     @Test
     void shouldGetBookByIdExisting() {
         BookDto bookDto = bookService.getById(2);
-        assertThat(bookDto.id()).isEqualTo(2);
-        assertThat(bookDto.title()).isEqualTo("Book2");
+        assertThat(bookDto.getId()).isEqualTo(2);
+        assertThat(bookDto.getTitle()).isEqualTo("Book2");
     }
 
     @DisplayName("throw NotFoundException of non-existing book by id")
@@ -43,8 +43,8 @@ public class BookServiceImplTest {
         bookService.create(new BookCreateDto("Book4", 1L, 1L));
 
         BookDto createdBookDto = bookService.getById(4);
-        assertThat(createdBookDto.id()).isEqualTo(4);
-        assertThat(createdBookDto.title()).isEqualTo("Book4");
+        assertThat(createdBookDto.getId()).isEqualTo(4);
+        assertThat(createdBookDto.getTitle()).isEqualTo("Book4");
     }
 
     @DisplayName("not create book with non-existing author and throw NotFoundException")
@@ -76,8 +76,8 @@ public class BookServiceImplTest {
         bookService.update(new BookUpdateDto(3L, "Book3New", 1L, 1L));
 
         BookDto updatedBookDto = bookService.getById(3);
-        assertThat(updatedBookDto.id()).isEqualTo(3);
-        assertThat(updatedBookDto.title()).isEqualTo("Book3New");
+        assertThat(updatedBookDto.getId()).isEqualTo(3);
+        assertThat(updatedBookDto.getTitle()).isEqualTo("Book3New");
     }
 
     @DisplayName("not update non-existing book and throw NotFoundException")
@@ -99,8 +99,8 @@ public class BookServiceImplTest {
                 .isInstanceOf(NotFoundException.class);
 
         BookDto bookDto = bookService.getById(3);
-        assertThat(bookDto.id()).isEqualTo(3);
-        assertThat(bookDto.title()).isEqualTo("Book3");
+        assertThat(bookDto.getId()).isEqualTo(3);
+        assertThat(bookDto.getTitle()).isEqualTo("Book3");
     }
 
     @DisplayName("not update book with non-existing genre and throw NotFoundException")
@@ -111,8 +111,8 @@ public class BookServiceImplTest {
                 .isInstanceOf(NotFoundException.class);
 
         BookDto bookDto = bookService.getById(3);
-        assertThat(bookDto.id()).isEqualTo(3);
-        assertThat(bookDto.title()).isEqualTo("Book3");
+        assertThat(bookDto.getId()).isEqualTo(3);
+        assertThat(bookDto.getTitle()).isEqualTo("Book3");
     }
 
     @DisplayName("delete book")
