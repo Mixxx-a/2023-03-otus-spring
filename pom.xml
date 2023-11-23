@@ -28,6 +28,7 @@
         <module>hw08-springDataMongoDB</module>
         <module>hw09-springMVC</module>
         <module>hw10-ajaxRest</module>
+        <module>hw12-springSecurityFormBased</module>
     </modules>
 
     <properties>
