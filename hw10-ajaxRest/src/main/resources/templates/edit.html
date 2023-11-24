@@ -21,12 +21,12 @@
             margin-top: 10px;
         }
     </style>
+    <script src="../static/script.js" th:src="@{/script.js}"></script>
     <script>
         window.onload = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const bookidParam = urlParams.get('id');
-            const bookResponse = await fetch("/api/books/" + bookidParam);
-            const book = await bookResponse.json();
+            const book = await fetchBookById(bookidParam);
 
             const idInput = document.getElementById("book-id-input")
             idInput.value = book.id
@@ -34,15 +34,13 @@
             titleInput.value = book.title
 
             const authorsSelect = document.getElementById("book-author-dropdown");
-            const authorsResponse = await fetch("/api/authors");
-            const authors = await authorsResponse.json();
+            const authors = await fetchAllAuthors();
             authors.forEach(author => {
                 authorsSelect.add(new Option(stringFromAuthor(author), author.id, false, author.id === book.authorId))
             });
 
             const genresSelect = document.getElementById("book-genre-dropdown")
-            const genresResponse = await fetch("/api/genres");
-            const genres = await genresResponse.json();
+            const genres = await fetchAllGenres();
             genres.forEach(genre => {
                 genresSelect.add(new Option(stringFromGenre(genre), genre.id, false, genre.id === book.genreId))
             });
@@ -69,14 +67,6 @@
                 window.location.replace("/")
             }
         }
-
-        function stringFromAuthor(author) {
-            return "Id: " + author.id + ", forename: " + author.forename + ", surname: " + author.surname;
-        }
-
-        function stringFromGenre(genre) {
-            return "Id: " + genre.id + ", name: " + genre.name;
-        }
     </script>
 </head>
 <body>
@@ -97,18 +87,12 @@
     <div class="row">
         <label for="book-author-dropdown">Author:</label>
         <select id="book-author-dropdown" name="authorId">
-            <!-- <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author}"
-                    th:selected="(${author.id} == ${book.author.id})">Authors List -->
-            <!-- </option> -->
         </select>
     </div>
 
     <div class="row">
         <label for="book-genre-dropdown">Genre:</label>
         <select id="book-genre-dropdown" name="genreId">
-            <!-- <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre}"
-                    th:selected="(${genre.id} == ${book.genre.id})">Genres List
-            </option> -->
         </select>
     </div>
 

@@ -17,20 +17,17 @@
             margin-top: 10px;
         }
     </style>
+    <script src="../static/script.js" th:src="@{/script.js}"></script>
     <script>
         window.onload = async () => {
             const authorsSelect = document.getElementById("book-author-dropdown")
-
-            const authorsResponse = await fetch("/api/authors");
-            const authors = await authorsResponse.json();
+            const authors = await fetchAllAuthors();
             authors.forEach(author => {
                 authorsSelect.add(new Option(stringFromAuthor(author), author.id))
             });
 
             const genresSelect = document.getElementById("book-genre-dropdown")
-
-            const genresResponse = await fetch("/api/genres");
-            const genres = await genresResponse.json();
+            const genres = await fetchAllGenres();
             genres.forEach(genre => {
                 genresSelect.add(new Option(stringFromGenre(genre), genre.id))
             });
@@ -52,14 +49,6 @@
             if (status === 200) {
                 window.location.replace("/")
             }
-        }
-
-        function stringFromAuthor(author) {
-            return "Id: " + author.id + ", forename: " + author.forename + ", surname: " + author.surname;
-        }
-
-        function stringFromGenre(genre) {
-            return "Id: " + genre.id + ", name: " + genre.name;
         }
     </script>
 </head>

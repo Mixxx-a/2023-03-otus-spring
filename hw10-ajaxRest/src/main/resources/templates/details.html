@@ -8,14 +8,14 @@
             padding: 50px;
         }
     </style>
+    <script src="../static/script.js" th:src="@{/script.js}"></script>
     <script>
         window.onload = async () => {
             const lis = document.getElementById("bookUl").getElementsByTagName("li")
             const urlParams = new URLSearchParams(window.location.search);
             const bookidParam = urlParams.get('id');
 
-            const response = await fetch("/api/books/" + bookidParam);
-            const book = await response.json();
+            const book = await fetchBookById(bookidParam);
            
             lis[0].innerHTML += book.id;
             lis[1].innerHTML += book.title;
