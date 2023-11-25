@@ -8,15 +8,30 @@
             padding: 50px;
         }
     </style>
+    <script src="../static/script.js" th:src="@{/script.js}"></script>
+    <script>
+        window.onload = async () => {
+            const lis = document.getElementById("bookUl").getElementsByTagName("li")
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookidParam = urlParams.get('id');
+
+            const book = await fetchBookById(bookidParam);
+           
+            lis[0].innerHTML += book.id;
+            lis[1].innerHTML += book.title;
+            lis[2].innerHTML += book.authorInfo;
+            lis[3].innerHTML += book.genreInfo;
+        }
+    </script>
 </head>
 <body>
 
 <h3>Book Info:</h3>
-<ul>
-    <li>ID: <span th:text="${book.id}">1</span></li>
-    <li>Title: <span th:text="${book.title}">Book title</span></li>
-    <li>Author: <span th:text="${book.authorInfo}">Book author</span></li>
-    <li>Genre: <span th:text="${book.genreInfo}">Book genre</span></li>
+<ul id="bookUl">
+    <li>ID: </li>
+    <li>Title: </li>
+    <li>Author: </li>
+    <li>Genre: </li>
 </ul>
 <a href="list.html" th:href="@{/}">
     <button type="button">Back to list</button>

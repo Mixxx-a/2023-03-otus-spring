@@ -21,27 +21,27 @@ public class BookDto {
     public BookDto() {
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public String title() {
+    public String getTitle() {
         return title;
     }
 
-    public Long authorId() {
+    public Long getAuthorId() {
         return authorId;
     }
 
-    public String authorInfo() {
+    public String getAuthorInfo() {
         return authorInfo;
     }
 
-    public Long genreId() {
+    public Long getGenreId() {
         return genreId;
     }
 
-    public String genreInfo() {
+    public String getGenreInfo() {
         return genreInfo;
     }
 
