@@ -6,6 +6,7 @@ import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.sladkov.otus.spring.hw12.domain.Author;
 import ru.sladkov.otus.spring.hw12.domain.Genre;
@@ -22,6 +23,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,6 +79,14 @@ public class BookControllerTest {
     );
 
     @Test
+    @DisplayName("not return books page to non authorized users")
+    void shouldNotReturnBooksPageNonAuth() throws Exception {
+        mvc.perform(get("/books"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser(username = "admin")
+    @Test
     @DisplayName("correctly return books page")
     void shouldReturnBooksPage() throws Exception {
         given(bookService.getAll()).willReturn(bookDtos);
@@ -92,6 +102,14 @@ public class BookControllerTest {
     }
 
     @Test
+    @DisplayName("not return book details page to non authorized users")
+    void shouldNotReturnBookDetailsPageNonAuth() throws Exception {
+        mvc.perform(get("/book?id=1"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser(username = "admin")
+    @Test
     @DisplayName("correctly return book details page")
     void shouldReturnBookDetailsPage() throws Exception {
         given(bookService.getById(1L)).willReturn(bookDtos.get(0));
@@ -101,6 +119,14 @@ public class BookControllerTest {
                 .andExpect(content().string(containsString(bookDtos.get(0).title())));
     }
 
+    @Test
+    @DisplayName("not return create book page to non authorized users")
+    void shouldNotReturnCreateBookPageNonAuth() throws Exception {
+        mvc.perform(get("/book/create"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser(username = "admin")
     @Test
     @DisplayName("correctly return create book page")
     void shouldReturnCreateBookPage() throws Exception {
@@ -118,29 +144,51 @@ public class BookControllerTest {
     }
 
     @Test
+    @DisplayName("not allow to create new book to non authorized users")
+    void shouldNotCreateBookNonAuth() throws Exception {
+        mvc.perform(post("/book/create?title=New book title&authorId=1&genreId=1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(username = "admin")
+    @Test
     @DisplayName("correctly create new book")
     void shouldCreateNewBook() throws Exception {
         BookCreateDto bookCreateDto = new BookCreateDto("New book title", 1L, 1L);
 
-        mvc.perform(post("/book/create?title=New book title&authorId=1&genreId=1"))
+        mvc.perform(post("/book/create?title=New book title&authorId=1&genreId=1")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection());
         verify(bookService, times(1)).create(bookCreateDto);
     }
 
+    @WithMockUser(username = "admin")
     @Test
     @DisplayName("not create new book when invalid data is passed")
     void shouldNotCreateNewBookInvalid() throws Exception {
-        mvc.perform(post("/book/create"))
+        mvc.perform(post("/book/create")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/create?authorId=1&genreId=1"))
+        mvc.perform(post("/book/create?authorId=1&genreId=1")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/create?title=New book title&genreId=1"))
+        mvc.perform(post("/book/create?title=New book title&genreId=1")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/create?title=New book title&authorId=1"))
+        mvc.perform(post("/book/create?title=New book title&authorId=1")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
         verify(bookService, times(0)).create(ArgumentMatchers.any());
     }
 
+    @Test
+    @DisplayName("not return edit book page to non authorized users")
+    void shouldNotReturnEditBookNonAuth() throws Exception {
+        mvc.perform(get("/edit?id=1"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser(username = "admin")
     @Test
     @DisplayName("correctly return edit book page")
     void shouldReturnEditBookPage() throws Exception {
@@ -161,35 +209,59 @@ public class BookControllerTest {
     }
 
     @Test
+    @DisplayName("not allow to edit book to non authorized users")
+    void shouldNotEditBookNonAuth() throws Exception {
+        mvc.perform(put("/book/edit?id=1&title=Updated title 1&authorId=2&genreId=2"))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(username = "admin")
+    @Test
     @DisplayName("correctly edit book")
     void shouldEditBook() throws Exception {
         BookUpdateDto bookUpdateDto = new BookUpdateDto(1L, "Updated title 1", 2L, 2L);
 
-        mvc.perform(put("/book/edit?id=1&title=Updated title 1&authorId=2&genreId=2"))
+        mvc.perform(put("/book/edit?id=1&title=Updated title 1&authorId=2&genreId=2")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection());
         verify(bookService, times(1)).update(bookUpdateDto);
     }
 
+    @WithMockUser(username = "admin")
     @Test
     @DisplayName("not edit book when invalid data is passed")
     void shouldNotEditBookInvalid() throws Exception {
-        mvc.perform(post("/book/edit"))
+        mvc.perform(post("/book/edit")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?title=Updated title 1&authorId=2&genreId=2"))
+        mvc.perform(post("/book/edit?title=Updated title 1&authorId=2&genreId=2")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?id=1&authorId=2&genreId=2"))
+        mvc.perform(post("/book/edit?id=1&authorId=2&genreId=2")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?id=1&title=Updated title 1&genreId=2"))
+        mvc.perform(post("/book/edit?id=1&title=Updated title 1&genreId=2")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
-        mvc.perform(post("/book/edit?id=1&title=Updated title 1&authorId=2"))
+        mvc.perform(post("/book/edit?id=1&title=Updated title 1&authorId=2")
+                        .with(csrf()))
                 .andExpect(status().is4xxClientError());
         verify(bookService, times(0)).update(ArgumentMatchers.any());
     }
 
     @Test
+    @DisplayName("not allow to delete book to non authorized users")
+    void shouldNotDeleteBookNonAuth() throws Exception {
+        mvc.perform(delete("/book/delete?id=2"))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(username = "admin")
+    @Test
     @DisplayName("correctly delete book")
     void shouldDeleteBook() throws Exception {
-        mvc.perform(delete("/book/delete?id=2"))
+        mvc.perform(delete("/book/delete?id=2")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection());
         verify(bookService, times(1)).deleteById(2);
     }
