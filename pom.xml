@@ -29,6 +29,7 @@
         <module>hw09-springMVC</module>
         <module>hw10-ajaxRest</module>
         <module>hw12-springSecurityFormBased</module>
+        <module>hw14-springBatch</module>
     </modules>
 
     <properties>
