@@ -16,4 +16,6 @@ public interface BookJpaRepository extends JpaRepository<BookJpa, Long> {
     @Override
     @EntityGraph(value = "book-entity-graph")
     List<BookJpa> findAll();
+
+    Optional<BookJpa> findByTitle(String title);
 }
