@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "books")
 @NamedEntityGraph(name = "book-entity-graph",
-        attributeNodes = {@NamedAttributeNode("authorJpa"), @NamedAttributeNode("genreJpa")})
+        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
 public class BookJpa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

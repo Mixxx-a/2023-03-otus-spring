@@ -5,7 +5,7 @@ import ru.sladkov.otus.spring.hw14.domain.jpa.CommentJpa;
 
 import java.util.List;
 
-public interface CommentRepositoryJpa extends JpaRepository<CommentJpa, Long> {
+public interface CommentJpaRepository extends JpaRepository<CommentJpa, Long> {
 
     List<CommentJpa> findByBookId(Long bookId);
 

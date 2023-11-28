@@ -5,7 +5,7 @@ import ru.sladkov.otus.spring.hw14.domain.mongo.CommentMongo;
 
 import java.util.List;
 
-public interface CommentRepositoryMongo extends MongoRepository<CommentMongo, String> {
+public interface CommentMongoRepository extends MongoRepository<CommentMongo, String> {
 
     List<CommentMongo> findByBookId(String bookId);
 
