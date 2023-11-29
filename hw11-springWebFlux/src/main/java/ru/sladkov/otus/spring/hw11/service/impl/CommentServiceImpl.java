@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Comment create(CommentDto commentDto) {
-        Long bookId = commentDto.bookId();
+        String bookId = commentDto.bookId();
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Create comment: Book with id = " + bookId + " is not found"));
 
@@ -38,14 +38,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Comment getById(long id) {
+    public Comment getById(String id) {
         return commentRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Comment with id = " + id + " is not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getAllByBookId(long bookId) {
+    public List<Comment> getAllByBookId(String bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow(() ->
                 new NotFoundException("Get comments for book: book with id = " + bookId + " is not found"));
         return commentRepository.findByBookId(book.getId());
@@ -54,11 +54,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void update(CommentDto newCommentDto) {
-        Long commentId = newCommentDto.id();
+        String commentId = newCommentDto.id();
         Comment existingComment = commentRepository.findById(commentId).orElseThrow(() ->
                 new NotFoundException("Update comment: Comment with id = " + commentId + " is not found"));
 
-        Long newBookId = newCommentDto.bookId();
+        String newBookId = newCommentDto.bookId();
         if (!newBookId.equals(existingComment.getBook().getId())) {
             throw new CommentModificationException("Update comment: can not assign this comment to different book");
         }
@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
 }

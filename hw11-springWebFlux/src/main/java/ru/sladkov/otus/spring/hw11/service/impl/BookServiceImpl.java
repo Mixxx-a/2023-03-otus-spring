@@ -2,17 +2,17 @@ package ru.sladkov.otus.spring.hw11.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.sladkov.otus.spring.hw11.domain.Author;
+import ru.sladkov.otus.spring.hw11.domain.Book;
+import ru.sladkov.otus.spring.hw11.domain.Genre;
 import ru.sladkov.otus.spring.hw11.dto.BookCreateDto;
+import ru.sladkov.otus.spring.hw11.dto.BookDto;
 import ru.sladkov.otus.spring.hw11.dto.BookUpdateDto;
+import ru.sladkov.otus.spring.hw11.exception.NotFoundException;
 import ru.sladkov.otus.spring.hw11.repository.AuthorRepository;
 import ru.sladkov.otus.spring.hw11.repository.BookRepository;
 import ru.sladkov.otus.spring.hw11.repository.CommentRepository;
 import ru.sladkov.otus.spring.hw11.repository.GenreRepository;
-import ru.sladkov.otus.spring.hw11.domain.Author;
-import ru.sladkov.otus.spring.hw11.domain.Book;
-import ru.sladkov.otus.spring.hw11.domain.Genre;
-import ru.sladkov.otus.spring.hw11.dto.BookDto;
-import ru.sladkov.otus.spring.hw11.exception.NotFoundException;
 import ru.sladkov.otus.spring.hw11.service.BookService;
 
 import java.util.List;
@@ -39,11 +39,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto create(BookCreateDto bookCreateDto) {
-        Long authorId = bookCreateDto.authorId();
+        String authorId = bookCreateDto.authorId();
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new NotFoundException("Create book: Author with id = " + authorId + " is not found"));
 
-        Long genreId = bookCreateDto.genreId();
+        String genreId = bookCreateDto.genreId();
         Genre genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new NotFoundException("Create book: Genre with id = " + genreId + " is not found"));
 
@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookDto getById(long id) {
+    public BookDto getById(String id) {
         Book savedBook = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book with id = " + id + " is not found"));
         return BookDto.fromDomainObject(savedBook);
@@ -72,16 +72,16 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto update(BookUpdateDto bookUpdateDto) {
-        Long bookId = bookUpdateDto.id();
+        String bookId = bookUpdateDto.id();
         Book exisitingBook = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Update book: Book with id = " + bookId + " is not found"));
 
-        Long newAuthorId = bookUpdateDto.authorId();
+        String newAuthorId = bookUpdateDto.authorId();
         Author newAuthor = authorRepository.findById(newAuthorId)
                 .orElseThrow(() ->
                         new NotFoundException("Update book: Author with id = " + newAuthorId + " is not found"));
 
-        Long newGenreId = bookUpdateDto.genreId();
+        String newGenreId = bookUpdateDto.genreId();
         Genre newGenre = genreRepository.findById(newGenreId)
                 .orElseThrow(() ->
                         new NotFoundException("Update book: Genre with id = " + newGenreId + " is not found"));
@@ -96,7 +96,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteAllByBookId(id);
         bookRepository.deleteById(id);
     }

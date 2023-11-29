@@ -2,9 +2,9 @@ package ru.sladkov.otus.spring.hw11.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sladkov.otus.spring.hw11.repository.GenreRepository;
 import ru.sladkov.otus.spring.hw11.domain.Genre;
 import ru.sladkov.otus.spring.hw11.exception.NotFoundException;
+import ru.sladkov.otus.spring.hw11.repository.GenreRepository;
 import ru.sladkov.otus.spring.hw11.service.GenreService;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    public Genre getById(long id) {
+    public Genre getById(String id) {
         return genreRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Genre with id = " + id + " is not found"));
     }

@@ -9,11 +9,11 @@ import java.util.List;
 public interface BookService {
     BookDto create(BookCreateDto bookCreateDto);
 
-    BookDto getById(long id);
+    BookDto getById(String id);
 
     List<BookDto> getAll();
 
     BookDto update(BookUpdateDto bookUpdateDto);
 
-    void deleteById(long id);
+    void deleteById(String id);
 }

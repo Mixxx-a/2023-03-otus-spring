@@ -6,22 +6,22 @@ import ru.sladkov.otus.spring.hw11.domain.Genre;
 
 public class BookDto {
 
-    private Long id;
+    private String id;
 
     private String title;
 
-    private Long authorId;
+    private String authorId;
 
     private String authorInfo;
 
-    private Long genreId;
+    private String genreId;
 
     private String genreInfo;
 
     public BookDto() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class BookDto {
         return title;
     }
 
-    public Long getAuthorId() {
+    public String getAuthorId() {
         return authorId;
     }
 
@@ -37,7 +37,7 @@ public class BookDto {
         return authorInfo;
     }
 
-    public Long getGenreId() {
+    public String getGenreId() {
         return genreId;
     }
 
@@ -45,7 +45,7 @@ public class BookDto {
         return genreInfo;
     }
 
-    public BookDto setId(Long id) {
+    public BookDto setId(String id) {
         this.id = id;
         return this;
     }
@@ -55,12 +55,12 @@ public class BookDto {
         return this;
     }
 
-    public BookDto setAuthorId(Long authorId) {
+    public BookDto setAuthorId(String authorId) {
         this.authorId = authorId;
         return this;
     }
 
-    public BookDto setGenreId(Long genreId) {
+    public BookDto setGenreId(String genreId) {
         this.genreId = genreId;
         return this;
     }
