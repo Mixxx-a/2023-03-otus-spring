@@ -14,6 +14,7 @@ import ru.sladkov.otus.spring.hw11.repository.GenreRepository;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @ChangeLog
 public class LibraryDBChangelog {
 
@@ -36,10 +37,10 @@ public class LibraryDBChangelog {
         Comment comment2 = new Comment("Cool Novel called Eugene Onegin!", book2);
         Comment comment3 = new Comment("Did not really like it", book1);
 
-        authorRepository.saveAll(List.of(author1, author2));
-        genreRepository.saveAll(List.of(genre1, genre2));
-        bookRepository.saveAll(List.of(book1, book2, book3));
-        commentRepository.saveAll(List.of(comment1, comment2, comment3));
+        authorRepository.saveAll(List.of(author1, author2)).blockLast();
+        genreRepository.saveAll(List.of(genre1, genre2)).blockLast();
+        bookRepository.saveAll(List.of(book1, book2, book3)).blockLast();
+        commentRepository.saveAll(List.of(comment1, comment2, comment3)).blockLast();
     }
 
 }

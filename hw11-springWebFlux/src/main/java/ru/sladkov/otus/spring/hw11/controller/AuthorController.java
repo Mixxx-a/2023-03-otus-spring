@@ -2,22 +2,22 @@ package ru.sladkov.otus.spring.hw11.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import ru.sladkov.otus.spring.hw11.domain.Author;
-import ru.sladkov.otus.spring.hw11.service.AuthorService;
+import ru.sladkov.otus.spring.hw11.repository.AuthorRepository;
 
-import java.util.List;
-
+@SuppressWarnings("unused")
 @RestController
 public class AuthorController {
 
-    private final AuthorService authorService;
+    private final AuthorRepository authorRepository;
 
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
+    public AuthorController(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     @GetMapping("/api/authors")
-    public List<Author> getAllAuthors() {
-        return authorService.getAll();
+    public Flux<Author> getAllAuthors() {
+        return authorRepository.findAll();
     }
 }

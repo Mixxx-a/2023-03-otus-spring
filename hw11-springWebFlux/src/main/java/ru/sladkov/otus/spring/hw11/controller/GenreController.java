@@ -2,22 +2,22 @@ package ru.sladkov.otus.spring.hw11.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import ru.sladkov.otus.spring.hw11.domain.Genre;
-import ru.sladkov.otus.spring.hw11.service.GenreService;
+import ru.sladkov.otus.spring.hw11.repository.GenreRepository;
 
-import java.util.List;
-
+@SuppressWarnings("unused")
 @RestController
 public class GenreController {
 
-    private final GenreService genreService;
+    private final GenreRepository genreRepository;
 
-    public GenreController(GenreService genreService) {
-        this.genreService = genreService;
+    public GenreController(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
     }
 
     @GetMapping("/api/genres")
-    public List<Genre> getAllGenres() {
-        return genreService.getAll();
+    public Flux<Genre> getAllGenres() {
+        return genreRepository.findAll();
     }
 }
