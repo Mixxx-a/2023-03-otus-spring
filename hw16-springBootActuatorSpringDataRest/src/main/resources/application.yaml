@@ -1,6 +1,9 @@
 spring:
   datasource:
     url: jdbc:h2:mem:librarydb
+  data:
+    rest:
+      basePath: /datarest
   sql:
     init:
       mode: always
@@ -15,3 +18,21 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  jmx:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  file:
+    name: hw16-springBootActuatorSpringDataRest.log

@@ -100,4 +100,9 @@ public class BookServiceImpl implements BookService {
         commentRepository.deleteAllByBookId(id);
         bookRepository.deleteById(id);
     }
+
+    @Override
+    public Long getCount() {
+        return bookRepository.count();
+    }
 }
