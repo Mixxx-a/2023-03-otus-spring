@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+@SuppressWarnings("unused")
 @Configuration
 public class SecurityConfiguration {
     @Bean
@@ -14,6 +15,9 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/", "/books").permitAll()
+                        .requestMatchers("/book").hasRole("USER")
+                        .requestMatchers("/book/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin();
         return http.build();
