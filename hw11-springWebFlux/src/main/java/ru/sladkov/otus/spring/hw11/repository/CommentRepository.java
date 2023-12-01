@@ -1,13 +1,12 @@
 package ru.sladkov.otus.spring.hw11.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
 import ru.sladkov.otus.spring.hw11.domain.Comment;
 
-import java.util.List;
+public interface CommentRepository extends ReactiveMongoRepository<Comment, String> {
 
-public interface CommentRepository extends MongoRepository<Comment, String> {
-
-    List<Comment> findByBookId(String bookId);
+    Flux<Comment> findByBookId(String bookId);
 
     void deleteAllByBookId(String bookId);
 

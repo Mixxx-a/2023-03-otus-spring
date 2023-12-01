@@ -23,37 +23,56 @@
             width: 50px;
         }
     </style>
+    <script src="https://unpkg.com/can-ndjson-stream@1.0.2/dist/global/can-ndjson-stream.js"></script>
     <script>
+        const streamErr = e => {
+            console.warn("error");
+            console.warn(e);
+        }
+
         window.onload = async () => {
             const booksTableBody = document.getElementById("booksTableBody")
 
             const response = await fetch("/api/books");
-            const books = await response.json();
-            books.forEach(book => {
-                const row = booksTableBody.insertRow()
-                row.id = "bookRow" + book.id
+            const dataStream = await can.ndjsonStream(response.body);
+            const reader = dataStream.getReader();
 
-                row.insertCell(0).innerHTML = book.id;
+            const read = result => {
+                if (result.done) {
+                    return;
+                }
+                const book = result.value
+                insertBookToTable(book)
+                reader.read().then(read, streamErr)
+            }
+            
+            reader.read().then(read, streamErr)
+        }
 
-                const cell2 = row.insertCell(1);
-                const detailsLink = document.createElement('a');
-                detailsLink.innerHTML = book.title;
-                detailsLink.href = "/book?id=" + book.id;
-                cell2.appendChild(detailsLink);
+        function insertBookToTable(book) {
+            const row = booksTableBody.insertRow()
+            row.id = "bookRow" + book.id
 
-                const cell3 = row.insertCell(2);
-                const editLink = document.createElement('a');
-                editLink.innerHTML = "Edit";
-                editLink.href = "/book/edit?id=" + book.id;
-                cell3.appendChild(editLink);
+            row.insertCell(0).innerHTML = book.id;
 
-                const cell4 = row.insertCell(3);
-                const deleteButton = document.createElement('button');
-                deleteButton.innerHTML = "Delete";
-                deleteButton.id = "deleteButton" + book.id;
-                deleteButton.onclick = deleteBook;
-                cell4.appendChild(deleteButton);
-            });
+            const cell2 = row.insertCell(1);
+            const detailsLink = document.createElement('a');
+            detailsLink.innerHTML = book.title;
+            detailsLink.href = "/book?id=" + book.id;
+            cell2.appendChild(detailsLink);
+
+            const cell3 = row.insertCell(2);
+            const editLink = document.createElement('a');
+            editLink.innerHTML = "Edit";
+            editLink.href = "/book/edit?id=" + book.id;
+            cell3.appendChild(editLink);
+
+            const cell4 = row.insertCell(3);
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = "Delete";
+            deleteButton.id = "deleteButton" + book.id;
+            deleteButton.onclick = deleteBook;
+            cell4.appendChild(deleteButton);
         }
 
         async function deleteBook(pointerEvent) {
@@ -62,11 +81,8 @@
             const response = await fetch("/api/books/" + bookId, {
                 method: "DELETE"
             });
-            const result = await response;
-            if (result.status === 200) {
-                const row = document.getElementById("bookRow" + bookId);
-                row.remove();
-            }
+            const row = document.getElementById("bookRow" + bookId);
+            row.remove();
         }
     </script>
 </head>
