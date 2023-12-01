@@ -32,6 +32,7 @@
         <module>hw12-springSecurityFormBased</module>
         <module>hw13-securityAuthorization</module>
         <module>hw14-springBatch</module>
+        <module>hw15-springIntegration</module>
         <module>hw16-springBootActuatorSpringDataRest</module>
         <module>hw17-docker</module>
         <module>hw18-hystrix</module>
