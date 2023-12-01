@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import ru.sladkov.otus.spring.hw15.service.CarOrderService;
 
 @Component
-public class CarFactoryServiceRunner implements CommandLineRunner {
+public class CarOrderServiceRunner implements CommandLineRunner {
 
     private final CarOrderService carOrderService;
 
-    public CarFactoryServiceRunner(CarOrderService carOrderService) {
+    public CarOrderServiceRunner(CarOrderService carOrderService) {
         this.carOrderService = carOrderService;
     }
 
