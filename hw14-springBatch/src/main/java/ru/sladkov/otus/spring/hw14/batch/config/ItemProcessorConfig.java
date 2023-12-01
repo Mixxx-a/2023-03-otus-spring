@@ -19,6 +19,9 @@ import ru.sladkov.otus.spring.hw14.repository.jpa.AuthorJpaRepository;
 import ru.sladkov.otus.spring.hw14.repository.jpa.BookJpaRepository;
 import ru.sladkov.otus.spring.hw14.repository.jpa.GenreJpaRepository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @SuppressWarnings("unused")
 @Configuration
 public class ItemProcessorConfig {
@@ -29,6 +32,12 @@ public class ItemProcessorConfig {
 
     private final BookJpaRepository bookJpaRepository;
 
+    private final Map<String, Long> authorsIdsTransitionMap = new HashMap<>();
+
+    private final Map<String, Long> genresIdsTransitionMap = new HashMap<>();
+
+    private final Map<String, Long> bookIdsTransitionMap = new HashMap<>();
+
     public ItemProcessorConfig(AuthorJpaRepository authorJpaRepository, GenreJpaRepository genreJpaRepository,
                                BookJpaRepository bookJpaRepository) {
         this.authorJpaRepository = authorJpaRepository;
@@ -38,21 +47,28 @@ public class ItemProcessorConfig {
 
     @Bean
     public ItemProcessor<AuthorMongo, AuthorJpa> authorProcessor() {
-        return new AuthorProcessor();
+        return new AuthorProcessor(authorJpaRepository, authorsIdsTransitionMap);
     }
 
     @Bean
     public ItemProcessor<GenreMongo, GenreJpa> genreProcessor() {
-        return new GenreProcessor();
+        return new GenreProcessor(genreJpaRepository, genresIdsTransitionMap);
     }
 
     @Bean
     public ItemProcessor<BookMongo, BookJpa> bookProcessor() {
-        return new BookProcessor(authorJpaRepository, genreJpaRepository);
+        return new BookProcessor.BookProcessorBuilder()
+                .setBookJpaRepository(bookJpaRepository)
+                .setAuthorJpaRepository(authorJpaRepository)
+                .setGenreJpaRepository(genreJpaRepository)
+                .setBookIdsTransitionMap(bookIdsTransitionMap)
+                .setAuthorsIdsTransitionMap(authorsIdsTransitionMap)
+                .setGenresIdsTransitionMap(genresIdsTransitionMap)
+                .build();
     }
 
     @Bean
     public ItemProcessor<CommentMongo, CommentJpa> commentProcessor() {
-        return new CommentProcessor(bookJpaRepository);
+        return new CommentProcessor(bookJpaRepository, bookIdsTransitionMap);
     }
 }
