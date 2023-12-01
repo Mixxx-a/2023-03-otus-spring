@@ -32,7 +32,6 @@ public class IntegrationConfig {
     @Bean
     public IntegrationFlow carFlow(EngineService engineService, BodyService bodyService) {
         return IntegrationFlow.from(orderChannel())
-                .bridge()
                 .handle(bodyService, "buildBody")
                 .handle(engineService, "assembleEngine")
                 .channel(carChannel())
