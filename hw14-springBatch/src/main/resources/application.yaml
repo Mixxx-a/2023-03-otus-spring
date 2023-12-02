@@ -1,27 +1,50 @@
 spring:
+  batch:
+    job:
+      enabled: false
+
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+    command:
+      version:
+        enabled: false
+  data:
+    mongodb:
+      host: localhost
+      port: 0
+      database: librarymongo
+
   datasource:
     url: jdbc:h2:mem:librarydb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
   sql:
     init:
       mode: always
-      data-locations: data.sql
       schema-locations: schema.sql
+
   jpa:
     generate-ddl: false
     hibernate:
       ddl-auto: none
     show-sql: true
-  data:
-    mongodb:
-      port: 0
-      database: librarymongo
-    shell:
-      command:
-        version:
-          enabled: false
 
 de:
   flapdoodle:
     mongodb:
       embedded:
         version: 4.0.2
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.sladkov.otus.spring.hw14.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
