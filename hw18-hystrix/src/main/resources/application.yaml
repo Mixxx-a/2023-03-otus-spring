@@ -15,3 +15,36 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+
+hystrix:
+  command:
+    getAuthor:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+    getAuthors:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+    getBook:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+    getBooks:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+    getGenre:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+    getGenres:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000

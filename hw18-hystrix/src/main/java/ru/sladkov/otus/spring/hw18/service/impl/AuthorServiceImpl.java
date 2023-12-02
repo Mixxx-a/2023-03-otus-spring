@@ -1,12 +1,11 @@
 package ru.sladkov.otus.spring.hw18.service.impl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sladkov.otus.spring.hw18.repository.AuthorRepository;
 import ru.sladkov.otus.spring.hw18.domain.Author;
 import ru.sladkov.otus.spring.hw18.exception.NotFoundException;
+import ru.sladkov.otus.spring.hw18.repository.AuthorRepository;
 import ru.sladkov.otus.spring.hw18.service.AuthorService;
 
 import java.util.List;
@@ -24,9 +23,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getAuthor", fallbackMethod = "getDummyAuthor", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
-    })
+    @HystrixCommand(commandKey = "getAuthor", fallbackMethod = "getDummyAuthor")
     public Author getById(long id) {
         Util.sleepRandomly();
         return authorRepository.findById(id)
@@ -35,18 +32,18 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getAuthors", fallbackMethod = "getDummyAuthors", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
-    })
+    @HystrixCommand(commandKey = "getAuthors", fallbackMethod = "getDummyAuthors")
     public List<Author> getAll() {
         Util.sleepRandomly();
         return authorRepository.findAll();
     }
 
+    @SuppressWarnings("unused")
     private Author getDummyAuthor(long id) {
         return dummyAuthor;
     }
 
+    @SuppressWarnings("unused")
     private List<Author> getDummyAuthors() {
         return List.of(
                 dummyAuthor,

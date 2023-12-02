@@ -1,7 +1,6 @@
 package ru.sladkov.otus.spring.hw18.service.impl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sladkov.otus.spring.hw18.domain.Author;
@@ -64,9 +63,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getBook", fallbackMethod = "getDummyBook", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
-    })
+    @HystrixCommand(commandKey = "getBook", fallbackMethod = "getDummyBook")
     public BookDto getById(long id) {
         Util.sleepRandomly();
         Book savedBook = bookRepository.findById(id)
@@ -76,9 +73,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getAllBooks", fallbackMethod = "getDummyBooks", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
-    })
+    @HystrixCommand(commandKey = "getBooks", fallbackMethod = "getDummyBooks")
     public List<BookDto> getAll() {
         Util.sleepRandomly();
         List<Book> books = bookRepository.findAll();
@@ -119,10 +114,12 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
+    @SuppressWarnings("unused")
     private BookDto getDummyBook(long id) {
         return dummyBookDto1;
     }
 
+    @SuppressWarnings("unused")
     private List<BookDto> getDummyBooks() {
         return List.of(
                 dummyBookDto1,

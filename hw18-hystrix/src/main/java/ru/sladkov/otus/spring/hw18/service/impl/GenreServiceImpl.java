@@ -1,12 +1,11 @@
 package ru.sladkov.otus.spring.hw18.service.impl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sladkov.otus.spring.hw18.repository.GenreRepository;
 import ru.sladkov.otus.spring.hw18.domain.Genre;
 import ru.sladkov.otus.spring.hw18.exception.NotFoundException;
+import ru.sladkov.otus.spring.hw18.repository.GenreRepository;
 import ru.sladkov.otus.spring.hw18.service.GenreService;
 
 import java.util.List;
@@ -24,9 +23,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getGenre", fallbackMethod = "getDummyGenre", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
-    })
+    @HystrixCommand(commandKey = "getGenre", fallbackMethod = "getDummyGenre")
     public Genre getById(long id) {
         Util.sleepRandomly();
         return genreRepository.findById(id)
@@ -35,18 +32,18 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getGenres", fallbackMethod = "getDummyGenres", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
-    })
+    @HystrixCommand(commandKey = "getGenres", fallbackMethod = "getDummyGenres")
     public List<Genre> getAll() {
         Util.sleepRandomly();
         return genreRepository.findAll();
     }
 
+    @SuppressWarnings("unused")
     private Genre getDummyGenre(long id) {
         return dummyGenre;
     }
 
+    @SuppressWarnings("unused")
     private List<Genre> getDummyGenres() {
         return List.of(
                 dummyGenre,
