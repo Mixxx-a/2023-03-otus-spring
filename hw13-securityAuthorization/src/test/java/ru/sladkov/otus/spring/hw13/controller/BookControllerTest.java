@@ -6,6 +6,7 @@ import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.sladkov.otus.spring.hw13.domain.Author;
@@ -13,6 +14,7 @@ import ru.sladkov.otus.spring.hw13.domain.Genre;
 import ru.sladkov.otus.spring.hw13.dto.BookCreateDto;
 import ru.sladkov.otus.spring.hw13.dto.BookDto;
 import ru.sladkov.otus.spring.hw13.dto.BookUpdateDto;
+import ru.sladkov.otus.spring.hw13.security.SecurityConfiguration;
 import ru.sladkov.otus.spring.hw13.service.AuthorService;
 import ru.sladkov.otus.spring.hw13.service.BookService;
 import ru.sladkov.otus.spring.hw13.service.GenreService;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("BookController should")
 @WebMvcTest(BookController.class)
+@Import(SecurityConfiguration.class)
 public class BookControllerTest {
 
     @Autowired
@@ -79,14 +82,6 @@ public class BookControllerTest {
     );
 
     @Test
-    @DisplayName("not return books page to non authorized users")
-    void shouldNotReturnBooksPageNonAuth() throws Exception {
-        mvc.perform(get("/books"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @WithMockUser(username = "admin")
-    @Test
     @DisplayName("correctly return books page")
     void shouldReturnBooksPage() throws Exception {
         given(bookService.getAll()).willReturn(bookDtos);
@@ -102,13 +97,21 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("not return book details page to non authorized users")
+    @DisplayName("not return book details page to non authorized users and redirect to login")
     void shouldNotReturnBookDetailsPageNonAuth() throws Exception {
         mvc.perform(get("/book?id=1"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "ANONYMOUS")
+    @Test
+    @DisplayName("not return book details page to anonymous user")
+    void shouldNotReturnBookDetailsPageAnon() throws Exception {
+        mvc.perform(get("/book?id=1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(roles = "USER")
     @Test
     @DisplayName("correctly return book details page")
     void shouldReturnBookDetailsPage() throws Exception {
@@ -120,13 +123,21 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("not return create book page to non authorized users")
+    @DisplayName("not return create book page to non authorized users and redirect to login")
     void shouldNotReturnCreateBookPageNonAuth() throws Exception {
         mvc.perform(get("/book/create"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "USER")
+    @Test
+    @DisplayName("not return create book page to non-admin users")
+    void shouldNotReturnCreateBookPageNonAdmin() throws Exception {
+        mvc.perform(get("/book/create"))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("correctly return create book page")
     void shouldReturnCreateBookPage() throws Exception {
@@ -144,13 +155,21 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("not allow to create new book to non authorized users")
+    @DisplayName("not allow to create new book to non authorized users and redirect to login")
     void shouldNotCreateBookNonAuth() throws Exception {
+        mvc.perform(post("/book/create?title=New book title&authorId=1&genreId=1"))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUser(roles = "USER")
+    @Test
+    @DisplayName("not allow to create new book to non-admin users")
+    void shouldNotCreateBookNonAdmin() throws Exception {
         mvc.perform(post("/book/create?title=New book title&authorId=1&genreId=1"))
                 .andExpect(status().isForbidden());
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("correctly create new book")
     void shouldCreateNewBook() throws Exception {
@@ -162,7 +181,7 @@ public class BookControllerTest {
         verify(bookService, times(1)).create(bookCreateDto);
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("not create new book when invalid data is passed")
     void shouldNotCreateNewBookInvalid() throws Exception {
@@ -182,13 +201,21 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("not return edit book page to non authorized users")
+    @DisplayName("not return edit book page to non authorized users and redirect to login")
     void shouldNotReturnEditBookNonAuth() throws Exception {
         mvc.perform(get("/edit?id=1"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection());
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "USER")
+    @Test
+    @DisplayName("not return edit book page to non-admin users")
+    void shouldNotReturnEditBookNonAdmin() throws Exception {
+        mvc.perform(get("/book/edit?id=1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("correctly return edit book page")
     void shouldReturnEditBookPage() throws Exception {
@@ -209,13 +236,21 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("not allow to edit book to non authorized users")
+    @DisplayName("not allow to edit book to non authorized users and redirect to login")
     void shouldNotEditBookNonAuth() throws Exception {
+        mvc.perform(put("/book/edit?id=1&title=Updated title 1&authorId=2&genreId=2"))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUser(roles = "USER")
+    @Test
+    @DisplayName("not allow to edit book to non-admin users")
+    void shouldNotEditBookNonAdmin() throws Exception {
         mvc.perform(put("/book/edit?id=1&title=Updated title 1&authorId=2&genreId=2"))
                 .andExpect(status().isForbidden());
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("correctly edit book")
     void shouldEditBook() throws Exception {
@@ -227,7 +262,7 @@ public class BookControllerTest {
         verify(bookService, times(1)).update(bookUpdateDto);
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("not edit book when invalid data is passed")
     void shouldNotEditBookInvalid() throws Exception {
@@ -250,13 +285,21 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("not allow to delete book to non authorized users")
+    @DisplayName("not allow to delete book to non authorized users and redirect to login")
     void shouldNotDeleteBookNonAuth() throws Exception {
+        mvc.perform(delete("/book/delete?id=2"))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUser(roles = "USER")
+    @Test
+    @DisplayName("not allow to delete book to non-admin users")
+    void shouldNotDeleteBookNonAdmin() throws Exception {
         mvc.perform(delete("/book/delete?id=2"))
                 .andExpect(status().isForbidden());
     }
 
-    @WithMockUser(username = "admin")
+    @WithMockUser(roles = "ADMIN")
     @Test
     @DisplayName("correctly delete book")
     void shouldDeleteBook() throws Exception {

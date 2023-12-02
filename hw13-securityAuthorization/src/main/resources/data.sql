@@ -26,3 +26,14 @@ MERGE INTO USERS(USERNAME, PASSWORD)
 KEY (USERNAME, PASSWORD)
 VALUES ('admin', '$2a$10$ekEH4RlpRixVxIhcTTHKrO4YLAr/QWn/YuBZwMXytowUq5eDect7W'), -- admin
        ('user', '$2a$10$Tq2zga6Ne.53ZcXfl8Jq9.qFQI3QEPY/ov.JpY4yRj8qpm3l.VRVq'); -- password
+
+MERGE INTO ROLES(NAME)
+KEY (NAME)
+VALUES ('ROLE_ADMIN'),
+       ('ROLE_USER');
+
+MERGE INTO USERS_ROLES(USERID, ROLEID)
+KEY (USERID, ROLEID)
+VALUES (1, 1),
+       (1, 2),
+       (2, 2);
